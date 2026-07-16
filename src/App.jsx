@@ -18,7 +18,7 @@ const CAT_COR = {
   "Alimentação":"#1B3A6B","Seguros/Prev.":"#2563EB","Vestuário":"#8B5CF6",
   "Transporte/Veículos":"#F59E0B","Saúde/Farmácia":"#10B981","Tecnologia":"#06B6D4",
   "Lazer/Entretenimento":"#EC4899","Educação":"#84CC16","Viagens":"#F97316",
-  "Beleza/Bem-estar":"#A78BFA","Doações/Igreja":"#6366F1","Compras Online":"#FB7185",
+  "Beleza/Bem-estar":"#A78BFA","Doações/Igreja":"#6366F1","Supermercado":"#0284c7","Compras Online":"#FB7185",
   "Tecnologia (Baze)":"#0EA5E9","Serviços (Baze)":"#3B82F6","Seguros (Baze)":"#1D4ED8",
   "⚠️ Encargos":"#EF4444","Facebook/Mídia":"#4267B2","Outros":"#94A3B8",
 };
@@ -28,7 +28,7 @@ const CAT_COR = {
 const TIPO = {
   "Seguros/Prev.":"fixo","Educação":"fixo","Serviços (Baze)":"fixo",
   "Tecnologia (Baze)":"fixo","Seguros (Baze)":"fixo","Tecnologia":"fixo",
-  "Alimentação":"misto","Transporte/Veículos":"misto",
+  "Alimentação":"misto","Supermercado":"fixo","Transporte/Veículos":"misto",
   "Vestuário":"extra","Lazer/Entretenimento":"extra","Viagens":"extra",
   "Beleza/Bem-estar":"extra","Compras Online":"extra","Facebook/Mídia":"extra",
   "Doações/Igreja":"misto","Saúde/Farmácia":"misto","⚠️ Encargos":"extra","Outros":"extra",
@@ -60,7 +60,7 @@ const MESES_DATA = {
       {desc:"AutoescolaLopes 1/5",        valor:244,  cat:"Educação",             cartao:"azul",  portador:"Eduardo",  tipo:"fixo"},
       {desc:"Netflix + Prime",            valor:178,  cat:"Lazer/Entretenimento", cartao:"azul",  portador:"Eduardo",  tipo:"fixo"},
       {desc:"Uber/99",                    valor:380,  cat:"Transporte/Veículos",  cartao:"azul",  portador:"Eduardo",  tipo:"misto"},
-      {desc:"Supermercados / Alimentação",valor:2800, cat:"Alimentação",          cartao:"azul",  portador:"Ambos",    tipo:"misto"},
+      {desc:"Supermercados / Alimentação",valor:2800, cat:"Supermercado",         cartao:"azul",  portador:"Ambos",    tipo:"fixo"},
       {desc:"Restaurantes",               valor:1800, cat:"Alimentação",          cartao:"azul",  portador:"Ambos",    tipo:"extra"},
       {desc:"Postos / Combustível",       valor:600,  cat:"Transporte/Veículos",  cartao:"azul",  portador:"Angélica", tipo:"misto"},
       {desc:"Vestuário / Compras",        valor:800,  cat:"Vestuário",            cartao:"azul",  portador:"Eduardo",  tipo:"extra"},
@@ -92,7 +92,7 @@ const MESES_DATA = {
       {desc:"RJ Pneus 2/10",             valor:409,  cat:"Transporte/Veículos",  cartao:"azul",  portador:"Eduardo",  tipo:"fixo"},
       {desc:"AutoescolaLopes 2/5",        valor:244,  cat:"Educação",             cartao:"azul",  portador:"Eduardo",  tipo:"fixo"},
       {desc:"Netflix + Prime",            valor:178,  cat:"Lazer/Entretenimento", cartao:"azul",  portador:"Eduardo",  tipo:"fixo"},
-      {desc:"Supermercados / Alimentação",valor:2500, cat:"Alimentação",          cartao:"azul",  portador:"Ambos",    tipo:"misto"},
+      {desc:"Supermercados / Alimentação",valor:2500, cat:"Supermercado",         cartao:"azul",  portador:"Ambos",    tipo:"fixo"},
       {desc:"Restaurantes",               valor:1400, cat:"Alimentação",          cartao:"azul",  portador:"Ambos",    tipo:"extra"},
       {desc:"Postos / Combustível",       valor:500,  cat:"Transporte/Veículos",  cartao:"azul",  portador:"Angélica", tipo:"misto"},
       {desc:"Uber/99",                    valor:350,  cat:"Transporte/Veículos",  cartao:"azul",  portador:"Eduardo",  tipo:"misto"},
@@ -124,7 +124,7 @@ const MESES_DATA = {
       {desc:"RJ Pneus 3/10",             valor:409,  cat:"Transporte/Veículos",  cartao:"azul",  portador:"Eduardo",  tipo:"fixo"},
       {desc:"AutoescolaLopes 3/5",        valor:244,  cat:"Educação",             cartao:"azul",  portador:"Eduardo",  tipo:"fixo"},
       {desc:"Netflix + Prime",            valor:178,  cat:"Lazer/Entretenimento", cartao:"azul",  portador:"Eduardo",  tipo:"fixo"},
-      {desc:"Supermercados / Alimentação",valor:2800, cat:"Alimentação",          cartao:"azul",  portador:"Ambos",    tipo:"misto"},
+      {desc:"Supermercados / Alimentação",valor:2800, cat:"Supermercado",         cartao:"azul",  portador:"Ambos",    tipo:"fixo"},
       {desc:"Restaurantes / Alimentação", valor:2200, cat:"Alimentação",          cartao:"azul",  portador:"Ambos",    tipo:"extra"},
       {desc:"Postos / Combustível",       valor:600,  cat:"Transporte/Veículos",  cartao:"azul",  portador:"Angélica", tipo:"misto"},
       {desc:"Uber/99",                    valor:400,  cat:"Transporte/Veículos",  cartao:"azul",  portador:"Eduardo",  tipo:"misto"},
@@ -158,7 +158,7 @@ const MESES_DATA = {
       {desc:"RJ Pneus 4/10",             valor:409,  cat:"Transporte/Veículos",  cartao:"azul",  portador:"Eduardo",  tipo:"fixo"},
       {desc:"AutoescolaLopes 4/5",        valor:244,  cat:"Educação",             cartao:"azul",  portador:"Eduardo",  tipo:"fixo"},
       {desc:"Netflix + Prime",            valor:178,  cat:"Lazer/Entretenimento", cartao:"azul",  portador:"Eduardo",  tipo:"fixo"},
-      {desc:"Supermercados / Alimentação",valor:2500, cat:"Alimentação",          cartao:"azul",  portador:"Ambos",    tipo:"misto"},
+      {desc:"Supermercados / Alimentação",valor:2500, cat:"Supermercado",         cartao:"azul",  portador:"Ambos",    tipo:"fixo"},
       {desc:"Restaurantes",               valor:1600, cat:"Alimentação",          cartao:"azul",  portador:"Ambos",    tipo:"extra"},
       {desc:"Postos / Combustível",       valor:600,  cat:"Transporte/Veículos",  cartao:"azul",  portador:"Angélica", tipo:"misto"},
       {desc:"Centauro 1/2",               valor:423,  cat:"Lazer/Entretenimento", cartao:"azul",  portador:"Eduardo",  tipo:"extra"},
@@ -194,7 +194,7 @@ const MESES_DATA = {
       {desc:"Netflix + Prime",            valor:178,  cat:"Lazer/Entretenimento", cartao:"azul",  portador:"Eduardo",  tipo:"fixo"},
       {desc:"Azul Linhas Aéreas",         valor:1200, cat:"Viagens",              cartao:"azul",  portador:"Eduardo",  tipo:"extra"},
       {desc:"BT Barra Vogue 7/12",        valor:579,  cat:"Lazer/Entretenimento", cartao:"azul",  portador:"Eduardo",  tipo:"fixo"},
-      {desc:"Supermercados / Alimentação",valor:2800, cat:"Alimentação",          cartao:"azul",  portador:"Ambos",    tipo:"misto"},
+      {desc:"Supermercados / Alimentação",valor:2800, cat:"Supermercado",         cartao:"azul",  portador:"Ambos",    tipo:"fixo"},
       {desc:"Restaurantes",               valor:2500, cat:"Alimentação",          cartao:"azul",  portador:"Ambos",    tipo:"extra"},
       {desc:"Postos / Combustível",       valor:600,  cat:"Transporte/Veículos",  cartao:"azul",  portador:"Angélica", tipo:"misto"},
       {desc:"Vestuário / Roupas",         valor:1200, cat:"Vestuário",            cartao:"azul",  portador:"Eduardo",  tipo:"extra"},
@@ -232,7 +232,7 @@ const MESES_DATA = {
       {desc:"Uber/99",                    valor:520,  cat:"Transporte/Veículos",  cartao:"azul",  portador:"Eduardo",  tipo:"misto"},
       {desc:"Postos / Combustível",       valor:420,  cat:"Transporte/Veículos",  cartao:"azul",  portador:"Eduardo",  tipo:"misto"},
       {desc:"Vestuário diverso",          valor:1367, cat:"Vestuário",            cartao:"azul",  portador:"Eduardo",  tipo:"extra"},
-      {desc:"Supermercados / Alimentação",valor:2700, cat:"Alimentação",          cartao:"azul",  portador:"Ambos",    tipo:"misto"},
+      {desc:"Supermercados / Alimentação",valor:2700, cat:"Supermercado",          cartao:"azul",  portador:"Ambos",    tipo:"fixo"},
       {desc:"Restaurantes / Alimentação", valor:2700, cat:"Alimentação",          cartao:"azul",  portador:"Ambos",    tipo:"extra"},
       {desc:"Demais Azul",                valor:9404, cat:"Alimentação",          cartao:"azul",  portador:"Ambos",    tipo:"misto"},
       {desc:"Vindi *Splitc",              valor:2399, cat:"Serviços (Baze)",      cartao:"sant",  portador:"Eduardo",  tipo:"fixo"},
@@ -275,7 +275,7 @@ const MESES_DATA = {
       {desc:"Gracie Barra",               valor:309,  cat:"Lazer/Entretenimento", cartao:"azul",  portador:"Eduardo",  tipo:"fixo"},
       {desc:"Wink Metropolitano",         valor:307,  cat:"Lazer/Entretenimento", cartao:"azul",  portador:"Angélica", tipo:"fixo"},
       {desc:"Vestuário diverso",          valor:1479, cat:"Vestuário",            cartao:"azul",  portador:"Eduardo",  tipo:"extra"},
-      {desc:"Supermercados / Alimentação",valor:2500, cat:"Alimentação",          cartao:"azul",  portador:"Ambos",    tipo:"misto"},
+      {desc:"Supermercados / Alimentação",valor:2500, cat:"Supermercado",         cartao:"azul",  portador:"Ambos",    tipo:"fixo"},
       {desc:"Restaurantes",               valor:1400, cat:"Alimentação",          cartao:"azul",  portador:"Ambos",    tipo:"extra"},
       {desc:"Apple.com Angélica",         valor:492,  cat:"Tecnologia",           cartao:"azul",  portador:"Angélica", tipo:"fixo"},
       {desc:"AutoEscola Lopes",           valor:244,  cat:"Educação",             cartao:"azul",  portador:"Eduardo",  tipo:"fixo"},
@@ -500,7 +500,7 @@ export default function Dashboard() {
 
         {/* ABAS PRINCIPAIS */}
         <div style={{display:"flex",gap:8,marginTop:18,flexWrap:"wrap"}}>
-          {[["evolucao","📈 Evolução"],["mensal","📋 Mensal"],["fixoextra","🔵 Fixos × Extras"],["comportamento","🧠 Comportamental"],["parcelas","📉 Parcelas & Economia"]].map(([k,l])=>(
+          {[["evolucao","📈 Evolução"],["mensal","📋 Mensal"],["fixoextra","🔵 Fixos × Extras"],["metas","🎯 Metas & Extras"],["comportamento","🧠 Comportamental"],["parcelas","📉 Parcelas & Economia"]].map(([k,l])=>(
             <button key={k} style={{...TAB(k),background:aba===k?"rgba(255,255,255,.2)":"rgba(255,255,255,.08)",color:"#fff",fontWeight:aba===k?700:400,border:aba===k?"1.5px solid rgba(255,255,255,.5)":"1px solid rgba(255,255,255,.1)"}}
               onClick={()=>setAba(k)}>{l}</button>
           ))}
@@ -1046,6 +1046,176 @@ export default function Dashboard() {
                     <span style={{width:7,height:7,background:co,borderRadius:2,display:"inline-block"}}/>{l}
                   </span>
                 ))}
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
+
+      {/* ═══════════════ ABA METAS & EXTRAS ═══════════════ */}
+      {aba==="metas"&&(()=>{
+        const [metasEdit, setMetasEdit] = useState({
+          total:28000,
+          "Vestuário":2500,"Lazer/Entretenimento":2000,"Viagens":1500,
+          "Compras Online":500,"Doações/Igreja":2500,"Restaurantes":2000,
+          "Beleza/Bem-estar":800,"Saúde/Farmácia":1200,"⚠️ Encargos":0,
+          "Facebook/Mídia":200,"Alimentação (restaurantes)":2000,
+        });
+        const [editando, setEditando] = useState(null);
+        const [tmpVal, setTmpVal] = useState("");
+
+        // Calcular totais de extras e mistos por categoria nos 7 meses
+        const CATS_FOCO = [
+          {cat:"Vestuário",       tipo:"extra", icon:"👗"},
+          {cat:"Lazer/Entretenimento", tipo:"extra", icon:"🎭"},
+          {cat:"Viagens",         tipo:"extra", icon:"✈️"},
+          {cat:"Compras Online",  tipo:"extra", icon:"🛒"},
+          {cat:"Doações/Igreja",  tipo:"misto", icon:"⛪"},
+          {cat:"Beleza/Bem-estar",tipo:"extra", icon:"💅"},
+          {cat:"Saúde/Farmácia",  tipo:"misto", icon:"💊"},
+          {cat:"⚠️ Encargos",    tipo:"extra", icon:"⚠️"},
+          {cat:"Facebook/Mídia",  tipo:"extra", icon:"📣"},
+        ];
+
+        // Média real dos 7 meses por categoria
+        const avgCat = {};
+        MESES.forEach(m=>{
+          const d = MESES_DATA[m];
+          d.lancamentos.forEach(l=>{
+            avgCat[l.cat] = (avgCat[l.cat]||0) + l.valor;
+          });
+        });
+        Object.keys(avgCat).forEach(k=>{ avgCat[k] = Math.round(avgCat[k]/7); });
+
+        // Último mês (Jul) por categoria
+        const julCat = {};
+        MESES_DATA["Jul"].lancamentos.forEach(l=>{
+          julCat[l.cat] = (julCat[l.cat]||0) + l.valor;
+        });
+
+        const totalMetaExtra = CATS_FOCO.reduce((a,c)=>a+(metasEdit[c.cat]||0),0);
+        const totalRealJul   = CATS_FOCO.reduce((a,c)=>a+(julCat[c.cat]||0),0);
+        const totalAvg       = CATS_FOCO.reduce((a,c)=>a+(avgCat[c.cat]||0),0);
+
+        return(
+          <div>
+            {/* HEADER */}
+            <div style={{background:"linear-gradient(135deg,#0f2a56 0%,#7C3AED 100%)",borderRadius:16,padding:"16px 14px",marginBottom:16}}>
+              <div style={{color:"#c4b5fd",fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:".1em",marginBottom:4}}>Controle de Metas</div>
+              <div style={{color:"#fff",fontSize:18,fontWeight:900,marginBottom:2}}>🎯 Metas por Categoria — Extras & Mistos</div>
+              <div style={{color:"#ddd6fe",fontSize:11,marginBottom:14}}>Clique em qualquer meta para editar · Dados reais jan–jul/26</div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
+                {[
+                  ["Meta total extras",totalMetaExtra,"#c4b5fd"],
+                  ["Jul real",totalRealJul,totalRealJul>totalMetaExtra?"#fca5a5":"#86efac"],
+                  ["Média 7 meses",totalAvg,totalAvg>totalMetaExtra?"#fca5a5":"#86efac"],
+                ].map(([l,v,co],i)=>(
+                  <div key={i} style={{background:"rgba(255,255,255,.1)",borderRadius:10,padding:"8px 10px",textAlign:"center"}}>
+                    <div style={{color:"rgba(255,255,255,.65)",fontSize:9,fontWeight:700,textTransform:"uppercase",marginBottom:2}}>{l}</div>
+                    <div style={{color:"#fff",fontSize:15,fontWeight:900}}>{R(v)}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* CARDS DE META POR CATEGORIA */}
+            <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:16}}>
+              {CATS_FOCO.map(({cat,tipo,icon})=>{
+                const meta   = metasEdit[cat]||0;
+                const real   = julCat[cat]||0;
+                const avg7   = avgCat[cat]||0;
+                const ok     = real <= meta || meta === 0;
+                const pct    = meta > 0 ? Math.min(Math.round(real/meta*100),150) : 0;
+                const corTipo = tipo==="extra"?P.verm:P.amber;
+                const ed = editando===cat;
+                return(
+                  <div key={cat} style={{background:"#fff",borderRadius:14,padding:"14px 16px",boxShadow:"0 1px 6px rgba(0,0,0,.06)",borderLeft:`4px solid ${ok?P.verde:P.verm}`}}>
+                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}}>
+                      <div style={{flex:1}}>
+                        <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:3}}>
+                          <span style={{fontSize:16}}>{icon}</span>
+                          <span style={{fontSize:13,fontWeight:800,color:"#1e293b"}}>{cat}</span>
+                          <span style={{fontSize:9,padding:"2px 6px",borderRadius:10,fontWeight:700,
+                            background:tipo==="extra"?"#FEF2F2":"#FFFBEB",
+                            color:tipo==="extra"?P.verm:P.amber}}>{tipo}</span>
+                        </div>
+                        <div style={{display:"flex",gap:16,fontSize:11}}>
+                          <span style={{color:"#64748b"}}>Jul: <strong style={{color:ok?P.verde:P.verm}}>{R(real)}</strong></span>
+                          <span style={{color:"#64748b"}}>Média 7m: <strong style={{color:"#374151"}}>{R(avg7)}</strong></span>
+                        </div>
+                      </div>
+                      <div style={{textAlign:"right",flexShrink:0}}>
+                        {ed?(
+                          <div style={{display:"flex",gap:6,alignItems:"center"}}>
+                            <input type="number" value={tmpVal}
+                              onChange={e=>setTmpVal(e.target.value)}
+                              onKeyDown={e=>{
+                                if(e.key==="Enter"){setMetasEdit(m=>({...m,[cat]:parseFloat(tmpVal)||0}));setEditando(null);}
+                                if(e.key==="Escape")setEditando(null);
+                              }}
+                              style={{width:90,padding:"5px 8px",fontSize:13,fontWeight:700,borderRadius:8,border:`2px solid #7C3AED`,outline:"none",textAlign:"right"}}
+                              autoFocus/>
+                            <button onClick={()=>{setMetasEdit(m=>({...m,[cat]:parseFloat(tmpVal)||0}));setEditando(null);}}
+                              style={{background:"#7C3AED",color:"#fff",border:"none",borderRadius:8,padding:"5px 10px",fontSize:12,cursor:"pointer",fontWeight:700}}>✓</button>
+                          </div>
+                        ):(
+                          <div onClick={()=>{setEditando(cat);setTmpVal(meta||"");}}
+                            style={{cursor:"pointer",padding:"4px 10px",borderRadius:10,background:meta>0?"#F5F3FF":"#f1f5f9",border:"1px dashed #7C3AED"}}>
+                            <div style={{fontSize:9,color:"#64748b",textAlign:"right"}}>Meta mensal</div>
+                            <div style={{fontSize:16,fontWeight:900,color:"#7C3AED"}}>{meta>0?R(meta):"Definir →"}</div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    {meta>0&&(
+                      <>
+                        <div style={{background:"#f1f5f9",borderRadius:6,height:8,overflow:"hidden",marginBottom:4}}>
+                          <div style={{width:`${pct}%`,height:"100%",background:ok?P.verde:P.verm,borderRadius:6,transition:"width .4s"}}/>
+                        </div>
+                        <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:"#64748b"}}>
+                          <span>{ok?"✅ Dentro da meta":"🔴 Acima da meta"}</span>
+                          <span style={{fontWeight:700,color:ok?P.verde:P.verm}}>{pct}% da meta</span>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* EVOLUÇÃO DOS EXTRAS — gráfico */}
+            <div style={{background:"#fff",borderRadius:14,padding:"14px 12px",marginBottom:14,boxShadow:"0 1px 6px rgba(0,0,0,.06)"}}>
+              <div style={{fontSize:13,fontWeight:800,color:"#374151",marginBottom:4}}>Evolução dos extras — jan a jul/26</div>
+              <div style={{fontSize:10,color:"#94a3b8",marginBottom:12}}>Gastos que podem ser controlados com metas</div>
+              <ResponsiveContainer width="100%" height={200}>
+                <BarChart data={MESES.map(m=>{
+                  const lanc = MESES_DATA[m].lancamentos;
+                  const extra = Math.round(lanc.filter(l=>l.tipo==="extra").reduce((a,l)=>a+l.valor,0));
+                  const misto = Math.round(lanc.filter(l=>l.tipo==="misto"&&!["Supermercado"].includes(l.cat)).reduce((a,l)=>a+l.valor,0));
+                  return {mes:m, extra, misto};
+                })} margin={{top:4,right:8,bottom:0,left:0}}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false}/>
+                  <XAxis dataKey="mes" tick={{fontSize:11,fill:"#94a3b8"}} axisLine={false} tickLine={false}/>
+                  <YAxis tickFormatter={Rk} tick={{fontSize:9,fill:"#94a3b8"}} axisLine={false} tickLine={false}/>
+                  <Tooltip content={<Tip/>}/>
+                  <ReferenceLine y={totalMetaExtra} stroke="#7C3AED" strokeDasharray="5 3" label={{value:"Meta",fontSize:9,fill:"#7C3AED",position:"right"}}/>
+                  <Bar dataKey="misto" name="Misto controlável" stackId="a" fill={P.amber} radius={[0,0,0,0]}/>
+                  <Bar dataKey="extra" name="Extra" stackId="a" fill={P.verm} radius={[3,3,0,0]}/>
+                </BarChart>
+              </ResponsiveContainer>
+              <div style={{display:"flex",gap:14,marginTop:8,fontSize:10,color:"#64748b"}}>
+                <span style={{display:"flex",alignItems:"center",gap:4}}><span style={{width:8,height:8,background:P.amber,borderRadius:2,display:"inline-block"}}/>Misto controlável</span>
+                <span style={{display:"flex",alignItems:"center",gap:4}}><span style={{width:8,height:8,background:P.verm,borderRadius:2,display:"inline-block"}}/>Extra</span>
+              </div>
+            </div>
+
+            {/* DICA */}
+            <div style={{background:"#F5F3FF",borderRadius:12,padding:"12px 14px",border:"1px solid #DDD6FE"}}>
+              <div style={{fontSize:12,fontWeight:700,color:"#7C3AED",marginBottom:4}}>💡 Como usar</div>
+              <div style={{fontSize:11,color:"#6D28D9",lineHeight:1.6}}>
+                Toque em qualquer meta para editar. As metas são salvas na sessão atual.
+                No mês seguinte, ao processar as novas faturas, os valores reais são atualizados automaticamente.
               </div>
             </div>
           </div>
