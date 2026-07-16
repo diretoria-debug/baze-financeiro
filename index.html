@@ -7,6 +7,55 @@
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { background: #f8fafc; font-family: 'Inter', system-ui, sans-serif; }
+
+      /* ── Mobile ── */
+      @media (max-width: 640px) {
+        /* Abas de navegação rolam horizontalmente */
+        .dash-root > div > div[style*="padding:\"26px"] {
+          padding: 14px 14px 14px !important;
+        }
+        /* Conteúdo com menos padding lateral */
+        .dash-content { padding: 10px 10px !important; }
+
+        /* Todos os grids 2 col → 1 col em mobile pequeno */
+        [style*="gridTemplateColumns:\"repeat(2,1fr)\""] {
+          grid-template-columns: 1fr 1fr !important;
+        }
+        [style*="gridTemplateColumns:\"1fr 1fr\""],
+        [style*="gridTemplateColumns:\"1.4fr 1fr\""],
+        [style*="gridTemplateColumns:\"1.5fr 1fr\""],
+        [style*="gridTemplateColumns:\"1fr 1fr 1fr\""],
+        [style*="gridTemplateColumns:\"1fr 1fr 1fr 1fr\""] {
+          grid-template-columns: 1fr !important;
+        }
+        [style*="gridTemplateColumns:\"repeat(auto-fit"] {
+          grid-template-columns: 1fr !important;
+        }
+        [style*="gridTemplateColumns:\"repeat(3,1fr)\""] {
+          grid-template-columns: 1fr 1fr !important;
+        }
+
+        /* Tabelas rolam */
+        table { min-width: 480px; }
+        .table-scroll { overflow-x: auto !important; }
+
+        /* Gráficos menores */
+        .recharts-responsive-container { min-height: 160px; }
+
+        /* Texto header menor */
+        h1, [style*="fontSize:26"], [style*="fontSize:28"] {
+          font-size: 20px !important;
+        }
+        [style*="fontSize:34"], [style*="fontSize:32"] {
+          font-size: 24px !important;
+        }
+      }
+
+      @media (max-width: 420px) {
+        [style*="gridTemplateColumns:\"repeat(2,1fr)\""] {
+          grid-template-columns: 1fr 1fr !important;
+        }
+      }
     </style>
   </head>
   <body>

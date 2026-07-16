@@ -475,21 +475,21 @@ export default function Dashboard() {
   });
 
   return (
-    <div style={{fontFamily:"'Inter',system-ui,sans-serif",maxWidth:980,margin:"0 auto",padding:"0 0 60px",color:"#1e293b",background:"#f8fafc",minHeight:"100vh"}}>
+    <div style={{fontFamily:"'Inter',system-ui,sans-serif",maxWidth:980,margin:"0 auto",padding:"0 0 60px",color:"#1e293b",background:"#f8fafc",minHeight:"100vh"}} className="dash-root">
 
       {/* HEADER */}
-      <div style={{background:`linear-gradient(135deg,#0f2a56 0%,#1B3A6B 50%,#2563EB 100%)`,padding:"26px 32px 22px",marginBottom:0}}>
+      <div style={{background:`linear-gradient(135deg,#0f2a56 0%,#1B3A6B 50%,#2563EB 100%)`,padding:"18px 16px 16px",marginBottom:0}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:12}}>
           <div>
             <div style={{color:"#93c5fd",fontSize:11,fontWeight:700,letterSpacing:".12em",textTransform:"uppercase",marginBottom:6}}>
               Análise Financeira Pessoal · Baze Segs
             </div>
-            <div style={{color:"#fff",fontSize:26,fontWeight:900,lineHeight:1.1}}>Janeiro → Julho 2026</div>
+            <div style={{color:"#fff",fontSize:22,fontWeight:900,lineHeight:1.1}}>Jan → Jul 2026</div>
             <div style={{color:"#bfdbfe",fontSize:13,marginTop:6}}>Eduardo & Angélica · 4 cartões · 7 meses completos</div>
           </div>
           <div style={{textAlign:"right"}}>
             <div style={{color:"#93c5fd",fontSize:11,marginBottom:2}}>Total acumulado 7 meses</div>
-            <div style={{color:"#fff",fontSize:34,fontWeight:900,lineHeight:1}}>{R(SERIE.reduce((a,s)=>a+s.total,0))}</div>
+            <div style={{color:"#fff",fontSize:26,fontWeight:900,lineHeight:1}}>{R(SERIE.reduce((a,s)=>a+s.total,0))}</div>
             <div style={{marginTop:6,display:"flex",gap:8,justifyContent:"flex-end",flexWrap:"wrap"}}>
               <span style={{background:"rgba(255,255,255,.12)",color:"#e2e8f0",borderRadius:20,padding:"3px 12px",fontSize:11,fontWeight:600}}>Média: {Rk(media)}/mês</span>
               <span style={{background:"#10B981",color:"#fff",borderRadius:20,padding:"3px 12px",fontSize:11,fontWeight:700}}>Melhor: Jul R$32.437</span>
@@ -507,18 +507,18 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div style={{padding:"20px 24px"}}>
+      <div style={{padding:"12px 12px"}} className="dash-content">
 
       {/* ═══════════════ ABA EVOLUÇÃO ═══════════════ */}
       {aba==="evolucao"&&(
         <div>
           {/* KPIs RÁPIDOS */}
-          <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:8,marginBottom:20}}>
+          <div style={{display:"flex",gap:8,marginBottom:20,overflowX:"auto",paddingBottom:4}}>
             {SERIE.map((s,i)=>{
               const prev = SERIE[i-1];
               const d = prev ? pct(s.total,prev.total) : null;
               return(
-                <div key={s.mes} style={{background:"#fff",borderRadius:12,padding:"12px 10px",textAlign:"center",boxShadow:"0 1px 4px rgba(0,0,0,.06)",cursor:"pointer",border:`2px solid ${mesSel===s.mes?P.azul2:"transparent"}`}}
+                <div key={s.mes} style={{background:"#fff",borderRadius:12,padding:"12px 10px",textAlign:"center",boxShadow:"0 1px 4px rgba(0,0,0,.06)",cursor:"pointer",border:`2px solid ${mesSel===s.mes?P.azul2:"transparent"}`,flexShrink:0,minWidth:80}}
                   onClick={()=>{setMesSel(s.mes);setAba("mensal");}}>
                   <div style={{fontSize:12,fontWeight:700,color:mesSel===s.mes?P.azul2:P.slate}}>{s.mes}</div>
                   <div style={{fontSize:15,fontWeight:900,color:"#0f172a",margin:"4px 0"}}>{Rk(s.total)}</div>
@@ -626,8 +626,9 @@ export default function Dashboard() {
           </div>
 
           {/* TABELA RESUMO */}
-          <div style={{background:"#fff",borderRadius:16,padding:"16px 20px",boxShadow:"0 1px 6px rgba(0,0,0,.06)"}}>
+          <div style={{background:"#fff",borderRadius:16,padding:"16px 12px",boxShadow:"0 1px 6px rgba(0,0,0,.06)"}}>
             <div style={{fontSize:14,fontWeight:700,color:"#374151",marginBottom:14}}>Resumo jan–jul</div>
+            <div style={{overflowX:"auto"}}>
             <table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}>
               <thead>
                 <tr style={{borderBottom:"2px solid #f1f5f9"}}>
@@ -672,6 +673,7 @@ export default function Dashboard() {
                 </tr>
               </tfoot>
             </table>
+            </div>
           </div>
         </div>
       )}
@@ -687,7 +689,7 @@ export default function Dashboard() {
           </div>
 
           {/* HEADER MÊS */}
-          <div style={{background:`linear-gradient(135deg,${P.azul} 0%,${P.azul2} 100%)`,borderRadius:16,padding:"18px 24px",marginBottom:16,display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:12}}>
+          <div style={{background:`linear-gradient(135deg,${P.azul} 0%,${P.azul2} 100%)`,borderRadius:16,padding:"14px 14px",marginBottom:16,display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:10}}>
             <div>
               <div style={{color:"#93c5fd",fontSize:11,fontWeight:700,textTransform:"uppercase",letterSpacing:".1em"}}>{mesSel} / 2026</div>
               <div style={{color:"#fff",fontSize:28,fontWeight:900}}>{R2(mesData.total)}</div>
@@ -708,7 +710,7 @@ export default function Dashboard() {
           </div>
 
           {/* BARRAS CARTÕES */}
-          <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:10,marginBottom:16}}>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:10,marginBottom:16}}>
             {["black","azul","sant","pao"].map(k=>{
               const v=mesData[k];
               const prev=mesAntData?mesAntData[k]:null;
@@ -732,7 +734,7 @@ export default function Dashboard() {
             const pessPct  = 100-bazePct;
             const bazeItems = lancM.filter(isBaze).reduce((acc,l)=>{acc[l.desc]=(acc[l.desc]||0)+l.valor;return acc;},{});
             return(
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:16}}>
+              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))",gap:10,marginBottom:16}}>
                 <div style={{background:"#EFF6FF",borderRadius:14,padding:"14px 18px",border:"1px solid #BFDBFE"}}>
                   <div style={{fontSize:11,fontWeight:800,color:"#0EA5E9",marginBottom:6}}>🏢 Baze Segs — {mesSel}/26</div>
                   <div style={{fontSize:24,fontWeight:900,color:"#0f172a"}}>{R(bazeM)}</div>
@@ -762,7 +764,7 @@ export default function Dashboard() {
           })()}
 
           {/* GRID CATEGORIA + PIE */}
-          <div style={{display:"grid",gridTemplateColumns:"1.4fr 1fr",gap:14,marginBottom:16}}>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))",gap:14,marginBottom:16}}>
             <div style={{background:"#fff",borderRadius:16,padding:"16px 18px",boxShadow:"0 1px 6px rgba(0,0,0,.06)"}}>
               <div style={{fontSize:13,fontWeight:700,color:"#374151",marginBottom:14}}>Por categoria</div>
               <div style={{display:"flex",flexDirection:"column",gap:8}}>
@@ -814,7 +816,7 @@ export default function Dashboard() {
           {/* LANÇAMENTOS */}
           <div style={{background:"#fff",borderRadius:16,padding:"16px 18px",boxShadow:"0 1px 6px rgba(0,0,0,.06)"}}>
             <div style={{fontSize:13,fontWeight:700,color:"#374151",marginBottom:12}}>Todos os lançamentos — {mesSel}/26</div>
-            <div style={{maxHeight:400,overflowY:"auto"}}>
+            <div style={{maxHeight:400,overflowY:"auto",overflowX:"auto"}}>
               <table style={{width:"100%",borderCollapse:"collapse",fontSize:11}}>
                 <thead>
                   <tr style={{background:"#f8fafc",position:"sticky",top:0}}>
