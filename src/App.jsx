@@ -447,10 +447,17 @@ export default function Dashboard() {
   const [mesSel, setMesSel] = useState("Jul");
   const [aba, setAba] = useState("evolucao");
   const [metasExtra, setMetasExtra] = useState({
+    // Fixos
+    "Supermercado":6000,"Seguros/Prev.":3000,"Educação":2800,
+    "Serviços (Baze)":3000,"Tecnologia (Baze)":1000,"Seguros (Baze)":400,
+    "Tecnologia":400,
+    // Mistos
+    "Alimentação":3000,"Transporte/Veículos":3000,"Doações/Igreja":2500,
+    "Saúde/Farmácia":1200,
+    // Extras
     "Vestuário":2500,"Lazer/Entretenimento":2000,"Viagens":1500,
-    "Compras Online":500,"Doações/Igreja":2500,
-    "Beleza/Bem-estar":800,"Saúde/Farmácia":1200,"⚠️ Encargos":0,
-    "Facebook/Mídia":200,
+    "Compras Online":500,"Beleza/Bem-estar":800,
+    "Facebook/Mídia":200,"⚠️ Encargos":0,
   });
   const [editandoMeta, setEditandoMeta] = useState(null);
   const [tmpMeta, setTmpMeta] = useState("");
@@ -508,7 +515,7 @@ export default function Dashboard() {
 
         {/* ABAS PRINCIPAIS */}
         <div style={{display:"flex",gap:8,marginTop:18,flexWrap:"wrap"}}>
-          {[["evolucao","📈 Evolução"],["mensal","📋 Mensal"],["fixoextra","🔵 Fixos × Extras"],["metas","🎯 Metas & Extras"],["comportamento","🧠 Comportamental"],["parcelas","📉 Parcelas & Economia"]].map(([k,l])=>(
+          {[["evolucao","📈 Evolução"],["mensal","📋 Mensal"],["fixoextra","🔵 Fixos × Extras"],["metas","🎯 Metas"],["comportamento","🧠 Comportamental"],["parcelas","📉 Parcelas & Economia"]].map(([k,l])=>(
             <button key={k} style={{...TAB(k),background:aba===k?"rgba(255,255,255,.2)":"rgba(255,255,255,.08)",color:"#fff",fontWeight:aba===k?700:400,border:aba===k?"1.5px solid rgba(255,255,255,.5)":"1px solid rgba(255,255,255,.1)"}}
               onClick={()=>setAba(k)}>{l}</button>
           ))}
@@ -1061,21 +1068,29 @@ export default function Dashboard() {
       })()}
 
 
-      {/* ═══════════════ ABA METAS & EXTRAS ═══════════════ */}
+      {/* ═══════════════ ABA METAS ═══════════════ */}
       {aba==="metas"&&(()=>{
-        const CATS_FOCO = [
+        const CATS_ALL = [
+          {cat:"Supermercado",         tipo:"fixo",  icon:"🛒"},
+          {cat:"Seguros/Prev.",        tipo:"fixo",  icon:"🛡️"},
+          {cat:"Educação",             tipo:"fixo",  icon:"🎓"},
+          {cat:"Tecnologia (Baze)",    tipo:"fixo",  icon:"💻"},
+          {cat:"Serviços (Baze)",      tipo:"fixo",  icon:"🏢"},
+          {cat:"Seguros (Baze)",       tipo:"fixo",  icon:"🏦"},
+          {cat:"Tecnologia",           tipo:"fixo",  icon:"📱"},
+          {cat:"Alimentação",          tipo:"misto", icon:"🍽️"},
+          {cat:"Transporte/Veículos",  tipo:"misto", icon:"🚗"},
+          {cat:"Doações/Igreja",       tipo:"misto", icon:"⛪"},
+          {cat:"Saúde/Farmácia",       tipo:"misto", icon:"💊"},
           {cat:"Vestuário",            tipo:"extra", icon:"👗"},
           {cat:"Lazer/Entretenimento", tipo:"extra", icon:"🎭"},
           {cat:"Viagens",              tipo:"extra", icon:"✈️"},
-          {cat:"Compras Online",       tipo:"extra", icon:"🛒"},
-          {cat:"Doações/Igreja",       tipo:"misto", icon:"⛪"},
+          {cat:"Compras Online",       tipo:"extra", icon:"🛍️"},
           {cat:"Beleza/Bem-estar",     tipo:"extra", icon:"💅"},
-          {cat:"Saúde/Farmácia",       tipo:"misto", icon:"💊"},
-          {cat:"⚠️ Encargos",         tipo:"extra", icon:"⚠️"},
           {cat:"Facebook/Mídia",       tipo:"extra", icon:"📣"},
+          {cat:"⚠️ Encargos",         tipo:"extra", icon:"⚠️"},
         ];
 
-        // Média real dos 7 meses por categoria
         const avgCat = {};
         MESES.forEach(m=>{
           MESES_DATA[m].lancamentos.forEach(l=>{
@@ -1084,110 +1099,119 @@ export default function Dashboard() {
         });
         Object.keys(avgCat).forEach(k=>{ avgCat[k] = Math.round(avgCat[k]/7); });
 
-        // Julho real por categoria
         const julCat = {};
         MESES_DATA["Jul"].lancamentos.forEach(l=>{
           julCat[l.cat] = (julCat[l.cat]||0) + l.valor;
         });
 
-        const totalMeta = CATS_FOCO.reduce((a,f)=>a+(metasExtra[f.cat]||0),0);
-        const totalJul  = CATS_FOCO.reduce((a,f)=>a+(julCat[f.cat]||0),0);
-        const totalAvg  = CATS_FOCO.reduce((a,f)=>a+(avgCat[f.cat]||0),0);
+        const totalMeta = CATS_ALL.reduce((a,f)=>a+(metasExtra[f.cat]||0),0);
+        const totalJul  = CATS_ALL.reduce((a,f)=>a+(Math.round(julCat[f.cat]||0)),0);
+
+        const COR_T = {fixo:P.azul, misto:P.amber, extra:P.verm};
+        const LABEL_T = {fixo:"🔵 Fixos", misto:"🟡 Mistos", extra:"🔴 Extras"};
+        let lastTipo = "";
 
         return(
           <div>
             {/* HEADER */}
             <div style={{background:"linear-gradient(135deg,#4C1D95 0%,#7C3AED 100%)",borderRadius:16,padding:"16px 14px",marginBottom:16}}>
-              <div style={{color:"#c4b5fd",fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:".1em",marginBottom:4}}>Controle de Metas</div>
-              <div style={{color:"#fff",fontSize:18,fontWeight:900,marginBottom:2}}>🎯 Extras & Mistos Controláveis</div>
-              <div style={{color:"#ddd6fe",fontSize:11,marginBottom:14}}>Toque em qualquer valor para editar a meta · Dados reais jan–jul/26</div>
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
-                {[["Meta total",totalMeta,"#c4b5fd"],["Jul real",totalJul,totalJul>totalMeta?"#fca5a5":"#86efac"],["Média 7m",totalAvg,totalAvg>totalMeta?"#fca5a5":"#86efac"]].map(([l,v,co],i)=>(
+              <div style={{color:"#c4b5fd",fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:".08em",marginBottom:3}}>Controle de Metas</div>
+              <div style={{color:"#fff",fontSize:18,fontWeight:900,marginBottom:10}}>🎯 Metas por Categoria</div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+                {[["Meta total mensal",totalMeta,"#c4b5fd"],["Jul real",totalJul,totalJul>totalMeta?"#fca5a5":"#86efac"]].map(([l,v,co],i)=>(
                   <div key={i} style={{background:"rgba(255,255,255,.12)",borderRadius:10,padding:"8px 10px",textAlign:"center"}}>
                     <div style={{color:"rgba(255,255,255,.65)",fontSize:9,fontWeight:700,textTransform:"uppercase",marginBottom:2}}>{l}</div>
-                    <div style={{color:"#fff",fontSize:14,fontWeight:900}}>{R(v)}</div>
+                    <div style={{color:"#fff",fontSize:15,fontWeight:900}}>{R(v)}</div>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* CARDS EDITÁVEIS */}
-            <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:16}}>
-              {CATS_FOCO.map(({cat,tipo,icon})=>{
+            {/* CARDS POR CATEGORIA */}
+            <div style={{display:"flex",flexDirection:"column",gap:8,marginBottom:16}}>
+              {CATS_ALL.map(({cat,tipo,icon},idx)=>{
+                const showSep = tipo !== (CATS_ALL[idx-1]||{}).tipo;
                 const meta = metasExtra[cat]||0;
                 const real = Math.round(julCat[cat]||0);
                 const avg7 = Math.round(avgCat[cat]||0);
-                const ok   = meta===0 || real<=meta;
-                const pct  = meta>0 ? Math.min(Math.round(real/meta*100),150) : 0;
+                const ok   = meta===0||real<=meta;
+                const pct  = meta>0?Math.min(Math.round(real/meta*100),150):0;
+                const cor  = COR_T[tipo];
                 const ed   = editandoMeta===cat;
                 return(
-                  <div key={cat} style={{background:"#fff",borderRadius:14,padding:"14px 16px",boxShadow:"0 1px 6px rgba(0,0,0,.06)",borderLeft:`4px solid ${ok?P.verde:P.verm}`}}>
-                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}}>
-                      <div style={{flex:1}}>
-                        <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:4}}>
-                          <span style={{fontSize:16}}>{icon}</span>
-                          <span style={{fontSize:13,fontWeight:800,color:"#1e293b"}}>{cat}</span>
-                          <span style={{fontSize:9,padding:"2px 6px",borderRadius:10,fontWeight:700,
-                            background:tipo==="extra"?"#FEF2F2":"#FFFBEB",
-                            color:tipo==="extra"?P.verm:P.amber}}>{tipo}</span>
-                        </div>
-                        <div style={{display:"flex",gap:14,fontSize:11}}>
-                          <span style={{color:"#64748b"}}>Jul: <strong style={{color:ok?P.verde:P.verm}}>{R(real)}</strong></span>
-                          <span style={{color:"#64748b"}}>Média: <strong style={{color:"#374151"}}>{R(avg7)}</strong></span>
-                        </div>
+                  <React.Fragment key={cat}>
+                    {showSep&&(
+                      <div style={{fontSize:11,fontWeight:800,color:cor,padding:"8px 2px 4px",borderBottom:`2px solid ${cor}33`}}>
+                        {LABEL_T[tipo]}
                       </div>
-                      <div style={{flexShrink:0,marginLeft:10}}>
-                        {ed?(
-                          <div style={{display:"flex",gap:6,alignItems:"center"}}>
-                            <input type="number" value={tmpMeta}
-                              onChange={e=>setTmpMeta(e.target.value)}
-                              onKeyDown={e=>{
-                                if(e.key==="Enter"){setMetasExtra(m=>({...m,[cat]:parseFloat(tmpMeta)||0}));setEditandoMeta(null);}
-                                if(e.key==="Escape")setEditandoMeta(null);
-                              }}
-                              style={{width:88,padding:"5px 8px",fontSize:13,fontWeight:700,borderRadius:8,border:"2px solid #7C3AED",outline:"none",textAlign:"right"}}
-                              autoFocus/>
-                            <button onClick={()=>{setMetasExtra(m=>({...m,[cat]:parseFloat(tmpMeta)||0}));setEditandoMeta(null);}}
-                              style={{background:"#7C3AED",color:"#fff",border:"none",borderRadius:8,padding:"5px 10px",fontSize:12,cursor:"pointer",fontWeight:700}}>✓</button>
-                          </div>
-                        ):(
-                          <div onClick={()=>{setEditandoMeta(cat);setTmpMeta(meta||"");}}
-                            style={{cursor:"pointer",padding:"6px 12px",borderRadius:10,background:meta>0?"#F5F3FF":"#f1f5f9",border:"1px dashed #7C3AED",textAlign:"right"}}>
-                            <div style={{fontSize:9,color:"#7C3AED",marginBottom:1}}>meta · toque p/ editar</div>
-                            <div style={{fontSize:15,fontWeight:900,color:"#7C3AED"}}>{meta>0?R(meta):"—"}</div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    {meta>0&&(
-                      <>
-                        <div style={{background:"#f1f5f9",borderRadius:6,height:7,overflow:"hidden",marginBottom:4}}>
-                          <div style={{width:`${pct}%`,height:"100%",background:ok?P.verde:P.verm,borderRadius:6,transition:"width .4s"}}/>
-                        </div>
-                        <div style={{display:"flex",justifyContent:"space-between",fontSize:10}}>
-                          <span style={{color:ok?P.verde:P.verm,fontWeight:700}}>{ok?"✅ Dentro da meta":"🔴 Acima da meta"}</span>
-                          <span style={{color:"#64748b",fontWeight:700}}>{pct}%</span>
-                        </div>
-                      </>
                     )}
-                  </div>
+                    <div style={{background:"#fff",borderRadius:12,padding:"12px 14px",boxShadow:"0 1px 4px rgba(0,0,0,.06)",borderLeft:`3px solid ${ok||meta===0?cor:P.verm}`}}>
+                      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+                        <div style={{flex:1}}>
+                          <div style={{display:"flex",alignItems:"center",gap:5,marginBottom:4}}>
+                            <span>{icon}</span>
+                            <span style={{fontSize:12,fontWeight:700,color:"#1e293b"}}>{cat}</span>
+                          </div>
+                          <div style={{display:"flex",gap:12,fontSize:10,color:"#64748b"}}>
+                            <span>Jul: <strong style={{color:ok||meta===0?cor:P.verm}}>{R(real)}</strong></span>
+                            <span>Média: <strong style={{color:"#374151"}}>{R(avg7)}</strong></span>
+                          </div>
+                        </div>
+                        <div style={{flexShrink:0,marginLeft:10}}>
+                          {ed?(
+                            <div style={{display:"flex",gap:5,alignItems:"center"}}>
+                              <input type="number" value={tmpMeta}
+                                onChange={e=>setTmpMeta(e.target.value)}
+                                onKeyDown={e=>{
+                                  if(e.key==="Enter"){setMetasExtra(m=>({...m,[cat]:parseFloat(tmpMeta)||0}));setEditandoMeta(null);}
+                                  if(e.key==="Escape")setEditandoMeta(null);
+                                }}
+                                style={{width:82,padding:"4px 6px",fontSize:13,fontWeight:700,borderRadius:8,border:"2px solid #7C3AED",outline:"none",textAlign:"right"}}
+                                autoFocus/>
+                              <button onClick={()=>{setMetasExtra(m=>({...m,[cat]:parseFloat(tmpMeta)||0}));setEditandoMeta(null);}}
+                                style={{background:"#7C3AED",color:"#fff",border:"none",borderRadius:8,padding:"4px 8px",fontSize:12,cursor:"pointer",fontWeight:700}}>✓</button>
+                            </div>
+                          ):(
+                            <div onClick={()=>{setEditandoMeta(cat);setTmpMeta(meta||"");}}
+                              style={{cursor:"pointer",padding:"5px 10px",borderRadius:10,background:meta>0?"#F5F3FF":"#f8fafc",border:"1px dashed #7C3AED",textAlign:"right",minWidth:80}}>
+                              <div style={{fontSize:9,color:"#7C3AED"}}>meta</div>
+                              <div style={{fontSize:14,fontWeight:900,color:"#7C3AED"}}>{meta>0?R(meta):"—"}</div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      {meta>0&&(
+                        <div style={{marginTop:8}}>
+                          <div style={{background:"#f1f5f9",borderRadius:5,height:6,overflow:"hidden",marginBottom:3}}>
+                            <div style={{width:`${pct}%`,height:"100%",background:ok?P.verde:P.verm,borderRadius:5,transition:"width .4s"}}/>
+                          </div>
+                          <div style={{display:"flex",justifyContent:"space-between",fontSize:9,color:"#64748b"}}>
+                            <span style={{color:ok?P.verde:P.verm,fontWeight:700}}>{ok?"✅ OK":"🔴 Acima"}</span>
+                            <span>{pct}% da meta</span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </React.Fragment>
                 );
               })}
             </div>
 
-            {/* GRÁFICO EVOLUÇÃO EXTRAS */}
-            <div style={{background:"#fff",borderRadius:14,padding:"14px 12px",marginBottom:14,boxShadow:"0 1px 6px rgba(0,0,0,.06)"}}>
-              <div style={{fontSize:13,fontWeight:800,color:"#374151",marginBottom:4}}>Evolução dos extras — jan a jul/26</div>
-              <div style={{fontSize:10,color:"#94a3b8",marginBottom:12}}>Gastos controláveis vs meta definida</div>
-              <ResponsiveContainer width="100%" height={180}>
+            {/* GRÁFICO EVOLUÇÃO */}
+            <div style={{background:"#fff",borderRadius:14,padding:"14px 12px",marginBottom:12,boxShadow:"0 1px 6px rgba(0,0,0,.06)"}}>
+              <div style={{fontSize:13,fontWeight:800,color:"#374151",marginBottom:3}}>Evolução — extras & mistos jan–jul</div>
+              <div style={{fontSize:10,color:"#94a3b8",marginBottom:12}}>Linha roxa = meta total definida</div>
+              <ResponsiveContainer width="100%" height={170}>
                 <BarChart data={MESES.map(m=>{
                   const lanc = MESES_DATA[m].lancamentos;
-                  const extra = Math.round(lanc.filter(l=>l.tipo==="extra").reduce((a,l)=>a+l.valor,0));
-                  const misto = Math.round(lanc.filter(l=>l.tipo==="misto").reduce((a,l)=>a+l.valor,0));
-                  return {mes:m, extra, misto};
+                  return {
+                    mes:m,
+                    extra:Math.round(lanc.filter(l=>l.tipo==="extra").reduce((a,l)=>a+l.valor,0)),
+                    misto:Math.round(lanc.filter(l=>l.tipo==="misto").reduce((a,l)=>a+l.valor,0)),
+                  };
                 })} margin={{top:4,right:8,bottom:0,left:0}}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false}/>
-                  <XAxis dataKey="mes" tick={{fontSize:11,fill:"#94a3b8"}} axisLine={false} tickLine={false}/>
+                  <XAxis dataKey="mes" tick={{fontSize:10,fill:"#94a3b8"}} axisLine={false} tickLine={false}/>
                   <YAxis tickFormatter={Rk} tick={{fontSize:9,fill:"#94a3b8"}} axisLine={false} tickLine={false}/>
                   <Tooltip content={<Tip/>}/>
                   <ReferenceLine y={totalMeta} stroke="#7C3AED" strokeDasharray="5 3" label={{value:"Meta",fontSize:9,fill:"#7C3AED",position:"right"}}/>
@@ -1195,15 +1219,10 @@ export default function Dashboard() {
                   <Bar dataKey="extra" name="Extra" stackId="a" fill={P.verm} radius={[3,3,0,0]}/>
                 </BarChart>
               </ResponsiveContainer>
-              <div style={{display:"flex",gap:14,marginTop:8,fontSize:10,color:"#64748b"}}>
-                <span style={{display:"flex",alignItems:"center",gap:4}}><span style={{width:8,height:8,background:P.amber,borderRadius:2,display:"inline-block"}}/>Misto</span>
-                <span style={{display:"flex",alignItems:"center",gap:4}}><span style={{width:8,height:8,background:P.verm,borderRadius:2,display:"inline-block"}}/>Extra</span>
-              </div>
             </div>
 
-            <div style={{background:"#F5F3FF",borderRadius:12,padding:"12px 14px",border:"1px solid #DDD6FE"}}>
-              <div style={{fontSize:11,fontWeight:700,color:"#7C3AED",marginBottom:3}}>💡 Como usar</div>
-              <div style={{fontSize:11,color:"#6D28D9",lineHeight:1.6}}>Toque em qualquer cartão para definir ou ajustar a meta mensal. A barra mostra o consumo de julho vs a meta definida.</div>
+            <div style={{background:"#F5F3FF",borderRadius:12,padding:"10px 14px",border:"1px solid #DDD6FE"}}>
+              <div style={{fontSize:10,color:"#6D28D9",lineHeight:1.6}}>💡 Toque em qualquer meta para editar o valor. As metas ficam salvas durante a sessão.</div>
             </div>
           </div>
         );
