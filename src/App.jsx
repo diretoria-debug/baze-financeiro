@@ -695,7 +695,7 @@ export default function Dashboard() {
             <div style={{color:"#bfdbfe",fontSize:13,marginTop:6}}>Eduardo & Angélica · 4 cartões · Jan–Dez 2026</div>
           </div>
           <div style={{textAlign:"right"}}>
-            <div style={{color:"#93c5fd",fontSize:11,marginBottom:2}}>Total acumulado Jan–Jul/26</div>
+            <div style={{color:"#93c5fd",fontSize:11,marginBottom:2}}>Total acumulado Jan–Dez/26</div>
             <div style={{color:"#fff",fontSize:26,fontWeight:900,lineHeight:1}}>{R(SERIE.reduce((a,s)=>a+s.total,0))}</div>
             <div style={{marginTop:6,display:"flex",gap:8,justifyContent:"flex-end",flexWrap:"wrap"}}>
               <span style={{background:"rgba(255,255,255,.12)",color:"#e2e8f0",borderRadius:20,padding:"3px 12px",fontSize:11,fontWeight:600}}>Média: {Rk(media)}/mês</span>
