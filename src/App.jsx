@@ -292,10 +292,97 @@ const MESES_DATA = {
       {desc:"⚠️ Encargos atraso Pão",    valor:37,   cat:"⚠️ Encargos",         cartao:"pao",   portador:"Eduardo",  tipo:"extra"},
       {desc:"Envio Mens.Automatica",      valor:8,    cat:"Serviços (Baze)",      cartao:"pao",   portador:"Eduardo",  tipo:"fixo"},
     ]
-  }
+  },
+
+  // ── AGO/26 ────────────────────────────────────────────────────────────────
+  Ago: {
+    total: 0, black: 0, azul: 0, sant: 0, pao: 0,
+    lancamentos: [
+      // Fixos recorrentes
+      {desc:"Vindi *Splitc",              valor:2399, cat:"Serviços (Baze)",      cartao:"sant", portador:"Eduardo",  tipo:"fixo"},
+      {desc:"Anthropic/Claude",           valor:506,  cat:"Tecnologia (Baze)",    cartao:"sant", portador:"Eduardo",  tipo:"fixo"},
+      {desc:"Pipefy",                     valor:433,  cat:"Tecnologia (Baze)",    cartao:"sant", portador:"Eduardo",  tipo:"fixo"},
+      {desc:"ASAAS",                      valor:330,  cat:"Serviços (Baze)",      cartao:"sant", portador:"Eduardo",  tipo:"fixo"},
+      {desc:"Bradesco AUT (última)",      valor:307,  cat:"Seguros (Baze)",       cartao:"sant", portador:"Eduardo",  tipo:"fixo"},
+      {desc:"Prudential D*APOL",          valor:1988, cat:"Seguros/Prev.",        cartao:"black",portador:"Angélica", tipo:"fixo"},
+      {desc:"AZOS Seguros",               valor:1154, cat:"Seguros/Prev.",        cartao:"azul", portador:"Ambos",    tipo:"fixo"},
+      {desc:"Sta Monica Taquara 8/12",    valor:2155, cat:"Educação",             cartao:"azul", portador:"Eduardo",  tipo:"fixo"},
+      {desc:"Google Workspace",           valor:588,  cat:"Tecnologia (Baze)",    cartao:"pao",  portador:"Eduardo",  tipo:"fixo"},
+      {desc:"Zoom.com",                   valor:94,   cat:"Tecnologia (Baze)",    cartao:"pao",  portador:"Eduardo",  tipo:"fixo"},
+      {desc:"McAfee (última)",            valor:60,   cat:"Tecnologia",           cartao:"pao",  portador:"Eduardo",  tipo:"fixo"},
+      // Parcelas ativas
+      {desc:"BT Barra Vogue 2/3",         valor:579,  cat:"Lazer/Entretenimento", cartao:"azul", portador:"Ambos",    tipo:"extra"},
+      {desc:"Azul Linhas viagem 3/4",     valor:475,  cat:"Viagens",             cartao:"azul", portador:"Ambos",    tipo:"extra"},
+      {desc:"RJ Pneus Eduardo 1/2",       valor:409,  cat:"Transporte/Veículos", cartao:"azul", portador:"Eduardo",  tipo:"misto"},
+    ]
+  },
+  // ── SET/26 ────────────────────────────────────────────────────────────────
+  Set: {
+    total: 0, black: 0, azul: 0, sant: 0, pao: 0,
+    lancamentos: [
+      {desc:"Vindi *Splitc",              valor:2399, cat:"Serviços (Baze)",      cartao:"sant", portador:"Eduardo",  tipo:"fixo"},
+      {desc:"Anthropic/Claude",           valor:506,  cat:"Tecnologia (Baze)",    cartao:"sant", portador:"Eduardo",  tipo:"fixo"},
+      {desc:"Pipefy",                     valor:433,  cat:"Tecnologia (Baze)",    cartao:"sant", portador:"Eduardo",  tipo:"fixo"},
+      {desc:"ASAAS",                      valor:330,  cat:"Serviços (Baze)",      cartao:"sant", portador:"Eduardo",  tipo:"fixo"},
+      {desc:"Prudential D*APOL",          valor:1988, cat:"Seguros/Prev.",        cartao:"black",portador:"Angélica", tipo:"fixo"},
+      {desc:"AZOS Seguros",               valor:1154, cat:"Seguros/Prev.",        cartao:"azul", portador:"Ambos",    tipo:"fixo"},
+      {desc:"Sta Monica Taquara 9/12",    valor:2155, cat:"Educação",             cartao:"azul", portador:"Eduardo",  tipo:"fixo"},
+      {desc:"Google Workspace",           valor:588,  cat:"Tecnologia (Baze)",    cartao:"pao",  portador:"Eduardo",  tipo:"fixo"},
+      {desc:"Zoom.com",                   valor:94,   cat:"Tecnologia (Baze)",    cartao:"pao",  portador:"Eduardo",  tipo:"fixo"},
+      // Parcelas ativas
+      {desc:"BT Barra Vogue 3/3 (última)",valor:579,  cat:"Lazer/Entretenimento", cartao:"azul", portador:"Ambos",    tipo:"extra"},
+      {desc:"Azul Linhas viagem 4/4 (última)",valor:475,cat:"Viagens",            cartao:"azul", portador:"Ambos",    tipo:"extra"},
+      {desc:"RJ Pneus Eduardo 2/2 (última)",valor:409, cat:"Transporte/Veículos", cartao:"azul", portador:"Eduardo",  tipo:"misto"},
+    ]
+  },
+  // ── OUT/26 ────────────────────────────────────────────────────────────────
+  Out: {
+    total: 0, black: 0, azul: 0, sant: 0, pao: 0,
+    lancamentos: [
+      {desc:"Vindi *Splitc",              valor:2399, cat:"Serviços (Baze)",      cartao:"sant", portador:"Eduardo",  tipo:"fixo"},
+      {desc:"Anthropic/Claude",           valor:506,  cat:"Tecnologia (Baze)",    cartao:"sant", portador:"Eduardo",  tipo:"fixo"},
+      {desc:"Pipefy",                     valor:433,  cat:"Tecnologia (Baze)",    cartao:"sant", portador:"Eduardo",  tipo:"fixo"},
+      {desc:"ASAAS",                      valor:330,  cat:"Serviços (Baze)",      cartao:"sant", portador:"Eduardo",  tipo:"fixo"},
+      {desc:"Prudential D*APOL",          valor:1988, cat:"Seguros/Prev.",        cartao:"black",portador:"Angélica", tipo:"fixo"},
+      {desc:"AZOS Seguros",               valor:1154, cat:"Seguros/Prev.",        cartao:"azul", portador:"Ambos",    tipo:"fixo"},
+      {desc:"Sta Monica Taquara 10/12",   valor:2155, cat:"Educação",             cartao:"azul", portador:"Eduardo",  tipo:"fixo"},
+      {desc:"Google Workspace",           valor:588,  cat:"Tecnologia (Baze)",    cartao:"pao",  portador:"Eduardo",  tipo:"fixo"},
+      {desc:"Zoom.com",                   valor:94,   cat:"Tecnologia (Baze)",    cartao:"pao",  portador:"Eduardo",  tipo:"fixo"},
+    ]
+  },
+  // ── NOV/26 ───────────────────────────────────────────────────────────────
+  Nov: {
+    total: 0, black: 0, azul: 0, sant: 0, pao: 0,
+    lancamentos: [
+      {desc:"Vindi *Splitc",              valor:2399, cat:"Serviços (Baze)",      cartao:"sant", portador:"Eduardo",  tipo:"fixo"},
+      {desc:"Anthropic/Claude",           valor:506,  cat:"Tecnologia (Baze)",    cartao:"sant", portador:"Eduardo",  tipo:"fixo"},
+      {desc:"Pipefy",                     valor:433,  cat:"Tecnologia (Baze)",    cartao:"sant", portador:"Eduardo",  tipo:"fixo"},
+      {desc:"ASAAS",                      valor:330,  cat:"Serviços (Baze)",      cartao:"sant", portador:"Eduardo",  tipo:"fixo"},
+      {desc:"Prudential D*APOL",          valor:1988, cat:"Seguros/Prev.",        cartao:"black",portador:"Angélica", tipo:"fixo"},
+      {desc:"AZOS Seguros",               valor:1154, cat:"Seguros/Prev.",        cartao:"azul", portador:"Ambos",    tipo:"fixo"},
+      {desc:"Sta Monica Taquara 11/12",   valor:2155, cat:"Educação",             cartao:"azul", portador:"Eduardo",  tipo:"fixo"},
+      {desc:"Google Workspace",           valor:588,  cat:"Tecnologia (Baze)",    cartao:"pao",  portador:"Eduardo",  tipo:"fixo"},
+      {desc:"Zoom.com",                   valor:94,   cat:"Tecnologia (Baze)",    cartao:"pao",  portador:"Eduardo",  tipo:"fixo"},
+    ]
+  },
+  // ── DEZ/26 ───────────────────────────────────────────────────────────────
+  Dez: {
+    total: 0, black: 0, azul: 0, sant: 0, pao: 0,
+    lancamentos: [
+      {desc:"Vindi *Splitc",              valor:2399, cat:"Serviços (Baze)",      cartao:"sant", portador:"Eduardo",  tipo:"fixo"},
+      {desc:"Anthropic/Claude",           valor:506,  cat:"Tecnologia (Baze)",    cartao:"sant", portador:"Eduardo",  tipo:"fixo"},
+      {desc:"Pipefy",                     valor:433,  cat:"Tecnologia (Baze)",    cartao:"sant", portador:"Eduardo",  tipo:"fixo"},
+      {desc:"ASAAS",                      valor:330,  cat:"Serviços (Baze)",      cartao:"sant", portador:"Eduardo",  tipo:"fixo"},
+      {desc:"Prudential D*APOL",          valor:1988, cat:"Seguros/Prev.",        cartao:"black",portador:"Angélica", tipo:"fixo"},
+      {desc:"AZOS Seguros",               valor:1154, cat:"Seguros/Prev.",        cartao:"azul", portador:"Ambos",    tipo:"fixo"},
+      {desc:"Sta Monica Taquara 12/12 (última)",valor:2155,cat:"Educação",       cartao:"azul", portador:"Eduardo",  tipo:"fixo"},
+      {desc:"Google Workspace",           valor:588,  cat:"Tecnologia (Baze)",    cartao:"pao",  portador:"Eduardo",  tipo:"fixo"},
+      {desc:"Zoom.com",                   valor:94,   cat:"Tecnologia (Baze)",    cartao:"pao",  portador:"Eduardo",  tipo:"fixo"},
+    ]
+  },
 };
 
-const MESES = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul"];
+const MESES = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
 const CARTAO_COR = {black:"#1B3A6B",azul:"#2563EB",sant:"#3B82F6",pao:"#93c5fd"};
 const CARTAO_NOME = {black:"Black",azul:"Azul",sant:"Santander",pao:"Pão de Açúcar"};
 
@@ -321,6 +408,17 @@ const Tip = ({active,payload,label}) => {
 
 // ─── CALCULAR FIXOS E EXTRAS POR MÊS ──────────────────────────────────────────
 function calcMes(nome) {
+  // Para meses futuros (total=0), calcular a partir dos lançamentos
+  if (MESES_DATA[nome] && MESES_DATA[nome].total === 0 && MESES_DATA[nome].lancamentos.length > 0) {
+    const lancs = MESES_DATA[nome].lancamentos;
+    MESES_DATA[nome].total   = Math.round(lancs.reduce((a,l)=>a+l.valor,0));
+    MESES_DATA[nome].black   = Math.round(lancs.filter(l=>l.cartao==="black").reduce((a,l)=>a+l.valor,0));
+    MESES_DATA[nome].azul    = Math.round(lancs.filter(l=>l.cartao==="azul").reduce((a,l)=>a+l.valor,0));
+    MESES_DATA[nome].sant    = Math.round(lancs.filter(l=>l.cartao==="sant").reduce((a,l)=>a+l.valor,0));
+    MESES_DATA[nome].pao     = Math.round(lancs.filter(l=>l.cartao==="pao").reduce((a,l)=>a+l.valor,0));
+  }
+  // Para mês atual (Ago), mesclar com dados ao vivo se disponível
+
   const d = MESES_DATA[nome];
   const lanc = d.lancamentos;
   const fixo = lanc.filter(l=>l.tipo==="fixo").reduce((a,l)=>a+l.valor,0);
@@ -792,12 +890,25 @@ export default function Dashboard() {
         <div>
           {/* SELETOR DE MÊS */}
           <div style={{display:"flex",gap:8,marginBottom:12,overflowX:"auto",paddingBottom:4}}>
-            {[...MESES,...(MESES.includes(MES_ATUAL)?[]:[MES_ATUAL])].map(m=>(
-              <button key={m} style={{...MTAB(m),flexShrink:0}} onClick={()=>setMesSel(m)}>
-                {m}/26{m===MES_ATUAL&&" 🔴"}
-              </button>
-            ))}
+            {MESES.map(m=>{
+              const isFuturo = ["Ago","Set","Out","Nov","Dez"].includes(m);
+              const isAtual  = m === MES_ATUAL;
+              return(
+                <button key={m} style={{
+                  ...MTAB(m), flexShrink:0,
+                  borderBottom: isFuturo&&!isAtual ? "2px solid #7C3AED" : undefined,
+                  opacity: isFuturo&&!isAtual&&mesSel!==m ? 0.75 : 1,
+                }} onClick={()=>setMesSel(m)}>
+                  {m}/26{isAtual&&" 🔴"}{isFuturo&&!isAtual&&" →"}
+                </button>
+              );
+            })}
           </div>
+          {["Ago","Set","Out","Nov","Dez"].includes(mesSel)&&mesSel!==MES_ATUAL&&(
+            <div style={{background:"#F5F3FF",borderRadius:10,padding:"8px 12px",marginBottom:12,border:"1px solid #DDD6FE",fontSize:11,color:"#6D28D9"}}>
+              📋 <strong>{mesSel}/26</strong> — Comprometidos já conhecidos (parcelas + fixos recorrentes). Novos lançamentos serão adicionados pela planilha conforme o mês avançar.
+            </div>
+          )}
 
           {/* ALERTA AO VIVO */}
           {mesSel===MES_ATUAL&&erroLive&&(
@@ -1785,7 +1896,7 @@ export default function Dashboard() {
       </div>
 
       <div style={{marginTop:8,fontSize:10,color:"#cbd5e1",textAlign:"center",paddingBottom:20}}>
-        Baze Segs · Análise Financeira Pessoal · Jan–Jul 2026 · Eduardo & Angélica Clementino da Silva
+        Baze Segs · Análise Financeira Pessoal · Jan–Dez 2026 · Eduardo & Angélica Clementino da Silva
       </div>
     </div>
   );
