@@ -444,7 +444,7 @@ const SUGESTOES = [
 
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
 export default function Dashboard() {
-  const SHEET_ID = "10OAjFB5QXQFxCNLmysNdaTdwoY83bvUBDJ2Tv6sBD-Y";
+  const SHEET_ID = "1-txr1Sju1tk-6rrhqMc18K_y21tXFGufENcMUkbhQPA";
 
   // Mês atual para detectar quando buscar dados ao vivo
   const MES_ATUAL = (()=>{
@@ -492,7 +492,7 @@ export default function Dashboard() {
     setLoadingLive(true);
     setErroLive(null);
     try {
-      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Lan%C3%A7amentos`;
+      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Gastos`;
       const res = await fetch(url);
       const text = await res.text();
       const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
