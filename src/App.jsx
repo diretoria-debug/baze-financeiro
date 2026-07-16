@@ -1451,7 +1451,7 @@ export default function Dashboard() {
                 {[
                   ["Meta total",totalMeta,"#c4b5fd"],
                   ["Comprometido",dadosMes.totalComprometido,"#fca5a5"],
-                  ["Saldo livre",saldoLivre,saldoLivre>=0?"#86efac":"#fca5a5"],
+                  [saldoLivre>=0?"Disponível":"Excedente",saldoLivre>=0?"#86efac":"#fca5a5"],
                 ].map(([l,v,co],i)=>(
                   <div key={i} style={{background:"rgba(255,255,255,.12)",borderRadius:10,padding:"8px 10px",textAlign:"center"}}>
                     <div style={{color:"rgba(255,255,255,.65)",fontSize:9,fontWeight:700,textTransform:"uppercase",marginBottom:2}}>{l}</div>
@@ -1488,7 +1488,7 @@ export default function Dashboard() {
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
                 <div style={{fontSize:13,fontWeight:800,color:"#374151"}}>Comprometido vs Meta — {mesProjSel}</div>
                 <div style={{fontSize:12,fontWeight:700,color:saldoLivre>=0?P.verde:P.verm}}>
-                  {saldoLivre>=0?`✅ Sobram ${R(saldoLivre)}`:`🔴 Excede em ${R(-saldoLivre)}`}
+                  {saldoLivre>=0?`✅ Disponível: ${R(saldoLivre)}`:`🔴 Excedente: ${R(-saldoLivre)}`}
                 </div>
               </div>
               <div style={{background:"#f1f5f9",borderRadius:8,height:14,overflow:"hidden",position:"relative"}}>
@@ -1566,7 +1566,10 @@ export default function Dashboard() {
                               )}
                               {meta>0&&comprometido>0&&(
                                 <div style={{fontSize:10,color:P.verde,fontWeight:700,marginTop:2}}>
-                                  livre: {R(meta-comprometido)}
+                                  {meta-comprometido >= 0
+                                    ? `disponível: ${R(meta-comprometido)}`
+                                    : <span style={{color:P.verm,fontWeight:800}}>excedente: {R(comprometido-meta)}</span>
+                                  }
                                 </div>
                               )}
                             </div>
@@ -1618,15 +1621,15 @@ export default function Dashboard() {
                       <td style={{padding:"7px 6px",textAlign:"right",fontWeight:900,color:P.azul}}>{R(dadosMes.totalComprometido)}</td>
                     </tr>
                     <tr style={{background:"#F0FDF4"}}>
-                      <td colSpan={3} style={{padding:"7px 6px",fontWeight:700,color:P.verde}}>Saldo livre para novos gastos</td>
-                      <td style={{padding:"7px 6px",textAlign:"right",fontWeight:900,color:saldoLivre>=0?P.verde:P.verm}}>{R(saldoLivre)}</td>
+                      <td colSpan={3} style={{padding:"7px 6px",fontWeight:700,color:saldoLivre>=0?P.verde:P.verm}}>{saldoLivre>=0?"Disponível para novos gastos":"Excedente do orçamento"}</td>
+                      <td style={{padding:"7px 6px",textAlign:"right",fontWeight:900,color:saldoLivre>=0?P.verde:P.verm}}>{saldoLivre>=0?R(saldoLivre):`+ ${R(-saldoLivre)}`}</td>
                     </tr>
                   </tfoot>
                 </table>
               </div>
               <div style={{marginTop:12,padding:"10px 12px",background:"#F5F3FF",borderRadius:10,border:"1px solid #DDD6FE"}}>
                 <div style={{fontSize:10,color:"#6D28D9",lineHeight:1.7}}>
-                  💡 Toque em qualquer meta (roxo) para editar. Cada mês tem suas próprias metas. Use "Copiar para todos os meses" para replicar. O saldo livre = meta − já comprometido naquele mês.
+                  💡 Toque em qualquer meta (roxo) para editar. Cada mês tem suas próprias metas. Use "Copiar para todos os meses" para replicar. Disponível = meta − comprometido. Excedente (vermelho) = já passou da meta.
                 </div>
               </div>
             </div>
