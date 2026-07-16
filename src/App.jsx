@@ -446,6 +446,7 @@ const SUGESTOES = [
 export default function Dashboard() {
   const [mesSel, setMesSel] = useState("Jul");
   const [aba, setAba] = useState("evolucao");
+  const [mesProjSel, setMesProjSel] = useState("Ago/26");
   const [metasExtra, setMetasExtra] = useState({
     // Fixos
     "Supermercado":6000,"Seguros/Prev.":3000,"Educação":2800,
@@ -1070,159 +1071,266 @@ export default function Dashboard() {
 
       {/* ═══════════════ ABA METAS ═══════════════ */}
       {aba==="metas"&&(()=>{
-        const CATS_ALL = [
-          {cat:"Supermercado",         tipo:"fixo",  icon:"🛒"},
-          {cat:"Seguros/Prev.",        tipo:"fixo",  icon:"🛡️"},
-          {cat:"Educação",             tipo:"fixo",  icon:"🎓"},
-          {cat:"Tecnologia (Baze)",    tipo:"fixo",  icon:"💻"},
-          {cat:"Serviços (Baze)",      tipo:"fixo",  icon:"🏢"},
-          {cat:"Seguros (Baze)",       tipo:"fixo",  icon:"🏦"},
-          {cat:"Tecnologia",           tipo:"fixo",  icon:"📱"},
-          {cat:"Alimentação",          tipo:"misto", icon:"🍽️"},
-          {cat:"Transporte/Veículos",  tipo:"misto", icon:"🚗"},
-          {cat:"Doações/Igreja",       tipo:"misto", icon:"⛪"},
-          {cat:"Saúde/Farmácia",       tipo:"misto", icon:"💊"},
-          {cat:"Vestuário",            tipo:"extra", icon:"👗"},
-          {cat:"Lazer/Entretenimento", tipo:"extra", icon:"🎭"},
-          {cat:"Viagens",              tipo:"extra", icon:"✈️"},
-          {cat:"Compras Online",       tipo:"extra", icon:"🛍️"},
-          {cat:"Beleza/Bem-estar",     tipo:"extra", icon:"💅"},
-          {cat:"Facebook/Mídia",       tipo:"extra", icon:"📣"},
-          {cat:"⚠️ Encargos",         tipo:"extra", icon:"⚠️"},
+
+        // ── FIXOS RECORRENTES — aparecem em todos os meses ───────────────────
+        const FIXOS_RECORRENTES = [
+          {desc:"Vindi *Splitc",          cat:"Serviços (Baze)",  cartao:"sant", valor:2399},
+          {desc:"Google Workspace",       cat:"Tecnologia (Baze)",cartao:"pao",  valor:588},
+          {desc:"Pipefy",                 cat:"Tecnologia (Baze)",cartao:"sant", valor:433},
+          {desc:"Anthropic/Claude",       cat:"Tecnologia (Baze)",cartao:"sant", valor:506},
+          {desc:"ASAAS",                  cat:"Serviços (Baze)",  cartao:"sant", valor:330},
+          {desc:"Prudential (Angélica)",  cat:"Seguros/Prev.",    cartao:"black",valor:1988},
+          {desc:"AZOS Seguros",           cat:"Seguros/Prev.",    cartao:"azul", valor:1154},
+          {desc:"Zoom.com",               cat:"Tecnologia (Baze)",cartao:"pao",  valor:94},
         ];
 
-        const avgCat = {};
-        MESES.forEach(m=>{
-          MESES_DATA[m].lancamentos.forEach(l=>{
-            avgCat[l.cat] = (avgCat[l.cat]||0) + l.valor;
+        // ── PARCELAS ATIVAS — por mês ─────────────────────────────────────────
+        // meses: 0=Ago, 1=Set, 2=Out, 3=Nov, 4=Dez
+        const MESES_PROJ = ["Ago/26","Set/26","Out/26","Nov/26","Dez/26"];
+
+        const PARCELAS_POR_MES = {
+          "Ago/26": [
+            {desc:"Sta Monica Taquara 8/12",  cat:"Educação",       cartao:"azul", valor:2155},
+            {desc:"BT Barra Vogue 2/3",       cat:"Lazer/Entretenimento",cartao:"azul",valor:579},
+            {desc:"Azul Linhas viagem 3/4",   cat:"Viagens",        cartao:"azul", valor:475},
+            {desc:"RJ Pneus Eduardo 1/2",     cat:"Transporte/Veículos",cartao:"azul",valor:409},
+            {desc:"Bradesco AUT (última)",    cat:"Seguros (Baze)", cartao:"sant", valor:307},
+            {desc:"McAfee (última)",          cat:"Tecnologia",     cartao:"pao",  valor:60},
+          ],
+          "Set/26": [
+            {desc:"Sta Monica Taquara 9/12",  cat:"Educação",       cartao:"azul", valor:2155},
+            {desc:"BT Barra Vogue 3/3 (última)",cat:"Lazer/Entretenimento",cartao:"azul",valor:579},
+            {desc:"Azul Linhas viagem 4/4 (última)",cat:"Viagens",  cartao:"azul", valor:475},
+            {desc:"RJ Pneus Eduardo 2/2 (última)",cat:"Transporte/Veículos",cartao:"azul",valor:409},
+          ],
+          "Out/26": [
+            {desc:"Sta Monica Taquara 10/12", cat:"Educação",       cartao:"azul", valor:2155},
+          ],
+          "Nov/26": [
+            {desc:"Sta Monica Taquara 11/12", cat:"Educação",       cartao:"azul", valor:2155},
+          ],
+          "Dez/26": [
+            {desc:"Sta Monica Taquara 12/12 (última)",cat:"Educação",cartao:"azul",valor:2155},
+          ],
+        };
+
+        // ── CALCULAR COMPROMETIDO POR MÊS ────────────────────────────────────
+        const calcMesProj = (mes) => {
+          const lancamentos = [
+            ...FIXOS_RECORRENTES,
+            ...(PARCELAS_POR_MES[mes]||[]),
+          ];
+          // Agrupar por categoria
+          const porCat = {};
+          lancamentos.forEach(l=>{
+            porCat[l.cat] = (porCat[l.cat]||[]);
+            porCat[l.cat].push(l);
           });
-        });
-        Object.keys(avgCat).forEach(k=>{ avgCat[k] = Math.round(avgCat[k]/7); });
+          const totalComprometido = lancamentos.reduce((a,l)=>a+l.valor,0);
+          return { lancamentos, porCat, totalComprometido };
+        };
 
-        const julCat = {};
-        MESES_DATA["Jul"].lancamentos.forEach(l=>{
-          julCat[l.cat] = (julCat[l.cat]||0) + l.valor;
-        });
-
-        const totalMeta = CATS_ALL.reduce((a,f)=>a+(metasExtra[f.cat]||0),0);
-        const totalJul  = CATS_ALL.reduce((a,f)=>a+(Math.round(julCat[f.cat]||0)),0);
+        const dadosMes = calcMesProj(mesProjSel);
+        const totalMeta = Object.values(metasExtra).reduce((a,v)=>a+(v||0),0);
+        const saldoLivre = totalMeta - dadosMes.totalComprometido;
 
         const COR_T = {fixo:P.azul, misto:P.amber, extra:P.verm};
-        const LABEL_T = {fixo:"🔵 Fixos", misto:"🟡 Mistos", extra:"🔴 Extras"};
-        let lastTipo = "";
+        const LABEL_T = {fixo:"🔵 Fixos",misto:"🟡 Mistos",extra:"🔴 Extras"};
+
+        // Categorias únicas no mês com meta e comprometido
+        const CAT_ALL = [
+          {cat:"Supermercado",         tipo:"fixo"},
+          {cat:"Seguros/Prev.",        tipo:"fixo"},
+          {cat:"Educação",             tipo:"fixo"},
+          {cat:"Tecnologia (Baze)",    tipo:"fixo"},
+          {cat:"Serviços (Baze)",      tipo:"fixo"},
+          {cat:"Seguros (Baze)",       tipo:"fixo"},
+          {cat:"Tecnologia",           tipo:"fixo"},
+          {cat:"Alimentação",          tipo:"misto"},
+          {cat:"Transporte/Veículos",  tipo:"misto"},
+          {cat:"Doações/Igreja",       tipo:"misto"},
+          {cat:"Saúde/Farmácia",       tipo:"misto"},
+          {cat:"Vestuário",            tipo:"extra"},
+          {cat:"Lazer/Entretenimento", tipo:"extra"},
+          {cat:"Viagens",              tipo:"extra"},
+          {cat:"Compras Online",       tipo:"extra"},
+          {cat:"Beleza/Bem-estar",     tipo:"extra"},
+          {cat:"Facebook/Mídia",       tipo:"extra"},
+          {cat:"⚠️ Encargos",         tipo:"extra"},
+        ];
+
+        const CAT_ICON2 = {
+          "Supermercado":"🛒","Seguros/Prev.":"🛡️","Educação":"🎓",
+          "Tecnologia (Baze)":"💻","Serviços (Baze)":"🏢","Seguros (Baze)":"🏦",
+          "Tecnologia":"📱","Alimentação":"🍽️","Transporte/Veículos":"🚗",
+          "Doações/Igreja":"⛪","Saúde/Farmácia":"💊","Vestuário":"👗",
+          "Lazer/Entretenimento":"🎭","Viagens":"✈️","Compras Online":"🛍️",
+          "Beleza/Bem-estar":"💅","Facebook/Mídia":"📣","⚠️ Encargos":"⚠️",
+        };
 
         return(
           <div>
             {/* HEADER */}
-            <div style={{background:"linear-gradient(135deg,#4C1D95 0%,#7C3AED 100%)",borderRadius:16,padding:"16px 14px",marginBottom:16}}>
-              <div style={{color:"#c4b5fd",fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:".08em",marginBottom:3}}>Controle de Metas</div>
-              <div style={{color:"#fff",fontSize:18,fontWeight:900,marginBottom:10}}>🎯 Metas por Categoria</div>
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
-                {[["Meta total mensal",totalMeta,"#c4b5fd"],["Jul real",totalJul,totalJul>totalMeta?"#fca5a5":"#86efac"]].map(([l,v,co],i)=>(
+            <div style={{background:"linear-gradient(135deg,#0f2a56 0%,#1B3A6B 50%,#7C3AED 100%)",borderRadius:16,padding:"16px 14px",marginBottom:16}}>
+              <div style={{color:"#c4b5fd",fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:".08em",marginBottom:3}}>Planejamento por Mês</div>
+              <div style={{color:"#fff",fontSize:18,fontWeight:900,marginBottom:2}}>🎯 Metas & Comprometidos — {mesProjSel}</div>
+              <div style={{color:"#ddd6fe",fontSize:11,marginBottom:14}}>
+                Parcelas + fixos já conhecidos · Saldo livre para novos gastos
+              </div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
+                {[
+                  ["Meta total",totalMeta,"#c4b5fd"],
+                  ["Comprometido",dadosMes.totalComprometido,"#fca5a5"],
+                  ["Saldo livre",saldoLivre,saldoLivre>=0?"#86efac":"#fca5a5"],
+                ].map(([l,v,co],i)=>(
                   <div key={i} style={{background:"rgba(255,255,255,.12)",borderRadius:10,padding:"8px 10px",textAlign:"center"}}>
                     <div style={{color:"rgba(255,255,255,.65)",fontSize:9,fontWeight:700,textTransform:"uppercase",marginBottom:2}}>{l}</div>
-                    <div style={{color:"#fff",fontSize:15,fontWeight:900}}>{R(v)}</div>
+                    <div style={{color:"#fff",fontSize:13,fontWeight:900}}>{R(v)}</div>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* CARDS POR CATEGORIA */}
+            {/* SELETOR DE MÊS */}
+            <div style={{display:"flex",gap:8,marginBottom:16,overflowX:"auto",paddingBottom:4}}>
+              {MESES_PROJ.map(m=>(
+                <button key={m} onClick={()=>setMesProjSel(m)}
+                  style={{padding:"7px 14px",borderRadius:20,border:"none",cursor:"pointer",fontSize:12,flexShrink:0,fontWeight:mesProjSel===m?800:500,
+                    background:mesProjSel===m?P.roxo:"#fff",color:mesProjSel===m?"#fff":"#64748b",
+                    boxShadow:mesProjSel===m?"0 2px 8px rgba(124,58,237,.4)":"0 1px 3px rgba(0,0,0,.08)"}}>
+                  {m}
+                </button>
+              ))}
+            </div>
+
+            {/* BARRA TOTAL */}
+            <div style={{background:"#fff",borderRadius:14,padding:"14px 16px",marginBottom:14,boxShadow:"0 1px 6px rgba(0,0,0,.06)"}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
+                <div style={{fontSize:13,fontWeight:800,color:"#374151"}}>Comprometido vs Meta — {mesProjSel}</div>
+                <div style={{fontSize:12,fontWeight:700,color:saldoLivre>=0?P.verde:P.verm}}>
+                  {saldoLivre>=0?`✅ Sobram ${R(saldoLivre)}`:`🔴 Excede em ${R(-saldoLivre)}`}
+                </div>
+              </div>
+              <div style={{background:"#f1f5f9",borderRadius:8,height:14,overflow:"hidden",position:"relative"}}>
+                <div style={{
+                  width:`${Math.min(Math.round(dadosMes.totalComprometido/totalMeta*100),100)}%`,
+                  height:"100%",background:saldoLivre>=0?P.azul2:P.verm,borderRadius:8,transition:"width .5s"
+                }}/>
+              </div>
+              <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:"#64748b",marginTop:5}}>
+                <span>{Math.round(dadosMes.totalComprometido/totalMeta*100)}% comprometido</span>
+                <span>{dadosMes.lancamentos.length} lançamentos já previstos</span>
+              </div>
+            </div>
+
+            {/* CATEGORIAS — meta vs comprometido */}
             <div style={{display:"flex",flexDirection:"column",gap:8,marginBottom:16}}>
-              {CATS_ALL.map(({cat,tipo,icon},idx)=>{
-                const showSep = tipo !== (CATS_ALL[idx-1]||{}).tipo;
-                const meta = metasExtra[cat]||0;
-                const real = Math.round(julCat[cat]||0);
-                const avg7 = Math.round(avgCat[cat]||0);
-                const ok   = meta===0||real<=meta;
-                const pct  = meta>0?Math.min(Math.round(real/meta*100),150):0;
+              {["fixo","misto","extra"].map(tipo=>{
+                const cats = CAT_ALL.filter(c=>c.tipo===tipo);
                 const cor  = COR_T[tipo];
-                const ed   = editandoMeta===cat;
                 return(
-                  <React.Fragment key={cat}>
-                    {showSep&&(
-                      <div style={{fontSize:11,fontWeight:800,color:cor,padding:"8px 2px 4px",borderBottom:`2px solid ${cor}33`}}>
-                        {LABEL_T[tipo]}
-                      </div>
-                    )}
-                    <div style={{background:"#fff",borderRadius:12,padding:"12px 14px",boxShadow:"0 1px 4px rgba(0,0,0,.06)",borderLeft:`3px solid ${ok||meta===0?cor:P.verm}`}}>
-                      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
-                        <div style={{flex:1}}>
-                          <div style={{display:"flex",alignItems:"center",gap:5,marginBottom:4}}>
-                            <span>{icon}</span>
-                            <span style={{fontSize:12,fontWeight:700,color:"#1e293b"}}>{cat}</span>
-                          </div>
-                          <div style={{display:"flex",gap:12,fontSize:10,color:"#64748b"}}>
-                            <span>Jul: <strong style={{color:ok||meta===0?cor:P.verm}}>{R(real)}</strong></span>
-                            <span>Média: <strong style={{color:"#374151"}}>{R(avg7)}</strong></span>
-                          </div>
-                        </div>
-                        <div style={{flexShrink:0,marginLeft:10}}>
-                          {ed?(
-                            <div style={{display:"flex",gap:5,alignItems:"center"}}>
-                              <input type="number" value={tmpMeta}
-                                onChange={e=>setTmpMeta(e.target.value)}
-                                onKeyDown={e=>{
-                                  if(e.key==="Enter"){setMetasExtra(m=>({...m,[cat]:parseFloat(tmpMeta)||0}));setEditandoMeta(null);}
-                                  if(e.key==="Escape")setEditandoMeta(null);
-                                }}
-                                style={{width:82,padding:"4px 6px",fontSize:13,fontWeight:700,borderRadius:8,border:"2px solid #7C3AED",outline:"none",textAlign:"right"}}
-                                autoFocus/>
-                              <button onClick={()=>{setMetasExtra(m=>({...m,[cat]:parseFloat(tmpMeta)||0}));setEditandoMeta(null);}}
-                                style={{background:"#7C3AED",color:"#fff",border:"none",borderRadius:8,padding:"4px 8px",fontSize:12,cursor:"pointer",fontWeight:700}}>✓</button>
+                  <div key={tipo}>
+                    <div style={{fontSize:11,fontWeight:800,color:cor,padding:"8px 2px 4px",borderBottom:`2px solid ${cor}33`,marginBottom:8}}>
+                      {LABEL_T[tipo]}
+                    </div>
+                    {cats.map(({cat})=>{
+                      const meta = metasExtra[cat]||0;
+                      const comprometido = Math.round(
+                        dadosMes.lancamentos.filter(l=>l.cat===cat).reduce((a,l)=>a+l.valor,0)
+                      );
+                      const pct = meta>0?Math.min(Math.round(comprometido/meta*100),150):0;
+                      const ok  = comprometido<=meta||meta===0;
+                      const itens = dadosMes.lancamentos.filter(l=>l.cat===cat);
+                      if(meta===0&&comprometido===0) return null;
+                      return(
+                        <div key={cat} style={{background:"#fff",borderRadius:12,padding:"12px 14px",marginBottom:8,
+                          boxShadow:"0 1px 4px rgba(0,0,0,.06)",borderLeft:`3px solid ${ok?cor:P.verm}`}}>
+                          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:comprometido>0?8:0}}>
+                            <div style={{flex:1}}>
+                              <div style={{display:"flex",alignItems:"center",gap:5,marginBottom:3}}>
+                                <span>{CAT_ICON2[cat]||"📌"}</span>
+                                <span style={{fontSize:12,fontWeight:700,color:"#1e293b"}}>{cat}</span>
+                                {comprometido>0&&<span style={{fontSize:9,padding:"1px 6px",borderRadius:10,background:"#FEF3C7",color:"#92400E",fontWeight:700}}>já previsto</span>}
+                              </div>
+                              {itens.length>0&&(
+                                <div style={{fontSize:10,color:"#64748b",lineHeight:1.7}}>
+                                  {itens.map((l,i)=>(
+                                    <div key={i} style={{display:"flex",justifyContent:"space-between"}}>
+                                      <span>• {l.desc}</span>
+                                      <span style={{fontWeight:600,marginLeft:8}}>{R(l.valor)}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
                             </div>
-                          ):(
-                            <div onClick={()=>{setEditandoMeta(cat);setTmpMeta(meta||"");}}
-                              style={{cursor:"pointer",padding:"5px 10px",borderRadius:10,background:meta>0?"#F5F3FF":"#f8fafc",border:"1px dashed #7C3AED",textAlign:"right",minWidth:80}}>
-                              <div style={{fontSize:9,color:"#7C3AED"}}>meta</div>
-                              <div style={{fontSize:14,fontWeight:900,color:"#7C3AED"}}>{meta>0?R(meta):"—"}</div>
+                            <div style={{flexShrink:0,marginLeft:12,textAlign:"right"}}>
+                              {comprometido>0&&<div style={{fontSize:13,fontWeight:800,color:ok?cor:P.verm}}>{R(comprometido)}</div>}
+                              <div style={{fontSize:11,color:"#94a3b8"}}>meta: {meta>0?R(meta):"—"}</div>
+                              {meta>0&&comprometido>0&&(
+                                <div style={{fontSize:10,color:P.verde,fontWeight:700}}>
+                                  livre: {R(meta-comprometido)}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          {meta>0&&comprometido>0&&(
+                            <div style={{background:"#f1f5f9",borderRadius:5,height:6,overflow:"hidden"}}>
+                              <div style={{width:`${pct}%`,height:"100%",background:ok?cor:P.verm,borderRadius:5,transition:"width .4s"}}/>
                             </div>
                           )}
                         </div>
-                      </div>
-                      {meta>0&&(
-                        <div style={{marginTop:8}}>
-                          <div style={{background:"#f1f5f9",borderRadius:5,height:6,overflow:"hidden",marginBottom:3}}>
-                            <div style={{width:`${pct}%`,height:"100%",background:ok?P.verde:P.verm,borderRadius:5,transition:"width .4s"}}/>
-                          </div>
-                          <div style={{display:"flex",justifyContent:"space-between",fontSize:9,color:"#64748b"}}>
-                            <span style={{color:ok?P.verde:P.verm,fontWeight:700}}>{ok?"✅ OK":"🔴 Acima"}</span>
-                            <span>{pct}% da meta</span>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </React.Fragment>
+                      );
+                    })}
+                  </div>
                 );
               })}
             </div>
 
-            {/* GRÁFICO EVOLUÇÃO */}
-            <div style={{background:"#fff",borderRadius:14,padding:"14px 12px",marginBottom:12,boxShadow:"0 1px 6px rgba(0,0,0,.06)"}}>
-              <div style={{fontSize:13,fontWeight:800,color:"#374151",marginBottom:3}}>Evolução — extras & mistos jan–jul</div>
-              <div style={{fontSize:10,color:"#94a3b8",marginBottom:12}}>Linha roxa = meta total definida</div>
-              <ResponsiveContainer width="100%" height={170}>
-                <BarChart data={MESES.map(m=>{
-                  const lanc = MESES_DATA[m].lancamentos;
-                  return {
-                    mes:m,
-                    extra:Math.round(lanc.filter(l=>l.tipo==="extra").reduce((a,l)=>a+l.valor,0)),
-                    misto:Math.round(lanc.filter(l=>l.tipo==="misto").reduce((a,l)=>a+l.valor,0)),
-                  };
-                })} margin={{top:4,right:8,bottom:0,left:0}}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false}/>
-                  <XAxis dataKey="mes" tick={{fontSize:10,fill:"#94a3b8"}} axisLine={false} tickLine={false}/>
-                  <YAxis tickFormatter={Rk} tick={{fontSize:9,fill:"#94a3b8"}} axisLine={false} tickLine={false}/>
-                  <Tooltip content={<Tip/>}/>
-                  <ReferenceLine y={totalMeta} stroke="#7C3AED" strokeDasharray="5 3" label={{value:"Meta",fontSize:9,fill:"#7C3AED",position:"right"}}/>
-                  <Bar dataKey="misto" name="Misto" stackId="a" fill={P.amber}/>
-                  <Bar dataKey="extra" name="Extra" stackId="a" fill={P.verm} radius={[3,3,0,0]}/>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-
-            <div style={{background:"#F5F3FF",borderRadius:12,padding:"10px 14px",border:"1px solid #DDD6FE"}}>
-              <div style={{fontSize:10,color:"#6D28D9",lineHeight:1.6}}>💡 Toque em qualquer meta para editar o valor. As metas ficam salvas durante a sessão.</div>
+            {/* LISTA COMPLETA COMPROMETIDA */}
+            <div style={{background:"#fff",borderRadius:14,padding:"14px 12px",boxShadow:"0 1px 6px rgba(0,0,0,.06)"}}>
+              <div style={{fontSize:13,fontWeight:800,color:"#374151",marginBottom:12}}>
+                📋 Todos os comprometidos — {mesProjSel}
+              </div>
+              <div style={{overflowX:"auto"}}>
+                <table style={{width:"100%",minWidth:360,borderCollapse:"collapse",fontSize:11}}>
+                  <thead>
+                    <tr style={{borderBottom:"2px solid #f1f5f9"}}>
+                      {["Descrição","Categoria","Cartão","Valor"].map(h=>(
+                        <th key={h} style={{padding:"5px 6px",textAlign:h==="Valor"?"right":"left",color:"#94a3b8",fontSize:9,fontWeight:700,textTransform:"uppercase"}}>{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {dadosMes.lancamentos.map((l,i)=>(
+                      <tr key={i} style={{borderBottom:"1px solid #f8fafc",background:i%2===0?"#fff":"#fafafa"}}>
+                        <td style={{padding:"6px 6px",fontWeight:600,color:"#1e293b"}}>{l.desc}</td>
+                        <td style={{padding:"6px 6px"}}>
+                          <span style={{fontSize:9,padding:"2px 5px",borderRadius:6,background:"#f1f5f9",color:"#475569",whiteSpace:"nowrap"}}>
+                            {CAT_ICON2[l.cat]||""} {l.cat}
+                          </span>
+                        </td>
+                        <td style={{padding:"6px 6px",fontSize:10,color:"#64748b",whiteSpace:"nowrap"}}>{l.cartao}</td>
+                        <td style={{padding:"6px 6px",textAlign:"right",fontWeight:800,color:P.azul,whiteSpace:"nowrap"}}>{R(l.valor)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                  <tfoot>
+                    <tr style={{borderTop:"2px solid #e2e8f0",background:"#f8fafc"}}>
+                      <td colSpan={3} style={{padding:"7px 6px",fontWeight:700,color:"#374151"}}>Total comprometido</td>
+                      <td style={{padding:"7px 6px",textAlign:"right",fontWeight:900,color:P.azul}}>{R(dadosMes.totalComprometido)}</td>
+                    </tr>
+                    <tr style={{background:"#F0FDF4"}}>
+                      <td colSpan={3} style={{padding:"7px 6px",fontWeight:700,color:P.verde}}>Saldo livre para novos gastos</td>
+                      <td style={{padding:"7px 6px",textAlign:"right",fontWeight:900,color:saldoLivre>=0?P.verde:P.verm}}>{R(saldoLivre)}</td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <div style={{marginTop:12,padding:"10px 12px",background:"#F5F3FF",borderRadius:10,border:"1px solid #DDD6FE"}}>
+                <div style={{fontSize:10,color:"#6D28D9",lineHeight:1.7}}>
+                  💡 As metas são editáveis na aba 🎯 Metas. Os valores comprometidos são parcelas já feitas e fixos recorrentes conhecidos. O saldo livre é o que ainda pode ser gasto no mês sem estourar.
+                </div>
+              </div>
             </div>
           </div>
         );
