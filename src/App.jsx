@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import {
   LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, Cell, PieChart, Pie, AreaChart, Area, ReferenceLine,
@@ -444,7 +444,20 @@ const SUGESTOES = [
 
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
 export default function Dashboard() {
-  const [mesSel, setMesSel] = useState("Jul");
+  const SHEET_ID = "10OAjFB5QXQFxCNLmysNdaTdwoY83bvUBDJ2Tv6sBD-Y";
+
+  // Mês atual para detectar quando buscar dados ao vivo
+  const MES_ATUAL = (()=>{
+    const d = new Date();
+    const meses = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
+    return meses[d.getMonth()];
+  })();
+
+  const [mesSel, setMesSel] = useState(MES_ATUAL);
+  const [dadosLive, setDadosLive] = useState(null);   // null = não carregado
+  const [loadingLive, setLoadingLive] = useState(false);
+  const [ultimaAtuLive, setUltimaAtuLive] = useState(null);
+  const [erroLive, setErroLive] = useState(null);
   const [aba, setAba] = useState("evolucao");
   const [mesProjSel, setMesProjSel] = useState("Ago/26");
   const METAS_PADRAO = {
@@ -474,7 +487,76 @@ export default function Dashboard() {
   const [editandoMeta, setEditandoMeta] = useState(null);
   const [tmpMeta, setTmpMeta] = useState("");
 
-  const mesData = useMemo(()=>calcMes(mesSel),[mesSel]);
+  // ── Buscar dados ao vivo da planilha ──────────────────────────────────────
+  const fetchLive = useCallback(async () => {
+    setLoadingLive(true);
+    setErroLive(null);
+    try {
+      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Lan%C3%A7amentos`;
+      const res = await fetch(url);
+      const text = await res.text();
+      const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+      if (!match) throw new Error("Formato inválido");
+      const table = JSON.parse(match[1]).table;
+      if (!table || !table.rows) { setDadosLive([]); return; }
+      const cols = table.cols.map(col => col.label);
+      const rows = table.rows
+        .map(row => {
+          const obj = {};
+          row.c.forEach((cell, i) => { obj[cols[i]] = cell ? cell.v : null; });
+          return obj;
+        })
+        .filter(r => r["Mês"] && r["Valor"] > 0);
+      setDadosLive(rows);
+      setUltimaAtuLive(new Date());
+    } catch(e) {
+      setErroLive("Não foi possível carregar a planilha. Verifique se está publicada publicamente.");
+    } finally {
+      setLoadingLive(false);
+    }
+  }, []);
+
+  // Carregar ao entrar na aba mensal do mês atual
+  useEffect(()=>{
+    if(mesSel === MES_ATUAL) {
+      fetchLive();
+      const iv = setInterval(fetchLive, 5 * 60 * 1000); // atualiza a cada 5min
+      return () => clearInterval(iv);
+    }
+  }, [mesSel]);
+
+  // ── Calcular dados do mês — live se for mês atual, estático se histórico ──
+  const mesData = useMemo(()=>{
+    if(mesSel === MES_ATUAL && dadosLive && dadosLive.length > 0) {
+      // Construir mesData a partir dos dados ao vivo
+      const lancamentos = dadosLive
+        .filter(r => {
+          const mesSheet = r["Mês"]||"";
+          const mesAbrev = MES_ATUAL.substring(0,3);
+          return mesSheet.startsWith(mesAbrev);
+        })
+        .map(r => ({
+          desc:     r["Descrição"] || "—",
+          cat:      r["Categoria"] || "Outros",
+          tipo:     r["Tipo"] || "extra",
+          portador: r["Portador"] || "Eduardo",
+          cartao:   (r["Cartão"]||"azul").toLowerCase(),
+          valor:    parseFloat(r["Valor"]) || 0,
+        }));
+      const total = Math.round(lancamentos.reduce((a,l)=>a+l.valor,0));
+      const fixo  = Math.round(lancamentos.filter(l=>l.tipo==="fixo").reduce((a,l)=>a+l.valor,0));
+      const misto = Math.round(lancamentos.filter(l=>l.tipo==="misto").reduce((a,l)=>a+l.valor,0));
+      const extra = Math.round(lancamentos.filter(l=>l.tipo==="extra").reduce((a,l)=>a+l.valor,0));
+      const black = Math.round(lancamentos.filter(l=>l.cartao==="black").reduce((a,l)=>a+l.valor,0));
+      const azul  = Math.round(lancamentos.filter(l=>l.cartao==="azul").reduce((a,l)=>a+l.valor,0));
+      const sant  = Math.round(lancamentos.filter(l=>l.cartao==="santander"||l.cartao==="sant").reduce((a,l)=>a+l.valor,0));
+      const pao   = Math.round(lancamentos.filter(l=>l.cartao==="pão de açúcar"||l.cartao==="pao").reduce((a,l)=>a+l.valor,0));
+      const baze  = Math.round(lancamentos.filter(l=>["Serviços (Baze)","Tecnologia (Baze)","Seguros (Baze)","Facebook/Mídia"].includes(l.cat)).reduce((a,l)=>a+l.valor,0));
+      const pessoal = total - baze;
+      return { total, fixo, misto, extra, black, azul, sant, pao, baze, pessoal, lancamentos };
+    }
+    return calcMes(mesSel);
+  },[mesSel, dadosLive]);
   const mesAnterior = MESES[MESES.indexOf(mesSel)-1];
   const mesAntData  = mesAnterior ? calcMes(mesAnterior) : null;
 
@@ -709,23 +791,54 @@ export default function Dashboard() {
       {aba==="mensal"&&(
         <div>
           {/* SELETOR DE MÊS */}
-          <div style={{display:"flex",gap:8,marginBottom:20,flexWrap:"wrap"}}>
-            {MESES.map(m=>(
-              <button key={m} style={MTAB(m)} onClick={()=>setMesSel(m)}>{m}/26</button>
+          <div style={{display:"flex",gap:8,marginBottom:12,overflowX:"auto",paddingBottom:4}}>
+            {[...MESES,...(MESES.includes(MES_ATUAL)?[]:[MES_ATUAL])].map(m=>(
+              <button key={m} style={{...MTAB(m),flexShrink:0}} onClick={()=>setMesSel(m)}>
+                {m}/26{m===MES_ATUAL&&" 🔴"}
+              </button>
             ))}
           </div>
+
+          {/* ALERTA AO VIVO */}
+          {mesSel===MES_ATUAL&&erroLive&&(
+            <div style={{background:"#FEF2F2",borderRadius:12,padding:"10px 14px",marginBottom:12,border:"1px solid #FECACA",fontSize:11,color:"#991B1B"}}>
+              ⚠️ {erroLive}
+            </div>
+          )}
+          {mesSel===MES_ATUAL&&dadosLive&&dadosLive.length===0&&!loadingLive&&!erroLive&&(
+            <div style={{background:"#FFFBEB",borderRadius:12,padding:"10px 14px",marginBottom:12,border:"1px solid #FDE68A",fontSize:11,color:"#92400E"}}>
+              📋 Nenhum lançamento em {MES_ATUAL}/26 na planilha ainda. <strong>Adicione em:</strong> docs.google.com/spreadsheets/d/{SHEET_ID}
+            </div>
+          )}
 
           {/* HEADER MÊS */}
           <div style={{background:`linear-gradient(135deg,${P.azul} 0%,${P.azul2} 100%)`,borderRadius:16,padding:"14px 14px",marginBottom:16,display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:10}}>
             <div>
-              <div style={{color:"#93c5fd",fontSize:11,fontWeight:700,textTransform:"uppercase",letterSpacing:".1em"}}>{mesSel} / 2026</div>
+              <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:2}}>
+                <div style={{color:"#93c5fd",fontSize:11,fontWeight:700,textTransform:"uppercase",letterSpacing:".1em"}}>{mesSel} / 2026</div>
+                {mesSel===MES_ATUAL&&(
+                  <span style={{background:"#10B981",color:"#fff",fontSize:9,fontWeight:800,padding:"2px 7px",borderRadius:20,letterSpacing:".05em"}}>
+                    {loadingLive?"⏳ atualizando…":"🔴 AO VIVO"}
+                  </span>
+                )}
+              </div>
               <div style={{color:"#fff",fontSize:28,fontWeight:900}}>{R2(mesData.total)}</div>
               {mesAntData&&<div style={{color:"#bfdbfe",fontSize:12,marginTop:4}}>
                 vs {mesAnterior}: {varTotal>=0?"▲":"▼"}<span style={{color:varTotal>=0?"#fca5a5":"#86efac",fontWeight:700}}>{Math.abs(varTotal).toFixed(1)}%</span>
                 {" "}({varTotal>=0?"+ ":"- "}{R(Math.abs(mesData.total-mesAntData.total))})
               </div>}
             </div>
-            <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+            <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:8}}>
+              {mesSel===MES_ATUAL&&(
+                <div style={{display:"flex",gap:8,alignItems:"center"}}>
+                  <button onClick={fetchLive} disabled={loadingLive}
+                    style={{background:"rgba(255,255,255,.15)",color:"#fff",border:"1px solid rgba(255,255,255,.3)",borderRadius:10,padding:"5px 10px",fontSize:10,cursor:"pointer",fontWeight:600}}>
+                    🔄 Atualizar
+                  </button>
+                  {ultimaAtuLive&&<span style={{color:"rgba(255,255,255,.5)",fontSize:9}}>{ultimaAtuLive.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})}</span>}
+                </div>
+              )}
+              <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
               {[["Fixo",mesData.fixo,P.azul2],["Misto",mesData.misto,P.amber],["Extra",mesData.extra,P.verm]].map(([l,v,c])=>(
                 <div key={l} style={{background:"rgba(255,255,255,.12)",borderRadius:12,padding:"10px 16px",textAlign:"center"}}>
                   <div style={{color:"rgba(255,255,255,.7)",fontSize:10,fontWeight:600}}>{l}</div>
@@ -733,6 +846,7 @@ export default function Dashboard() {
                   <div style={{color:c==="#fff"?c:"rgba(255,255,255,.7)",fontSize:10}}>{Math.round(v/mesData.total*100)}%</div>
                 </div>
               ))}
+              </div>
             </div>
           </div>
 
