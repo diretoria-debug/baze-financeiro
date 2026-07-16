@@ -904,7 +904,7 @@ export default function Dashboard() {
             </div>
 
             {/* 3 CARDS TIPO */}
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:14,marginBottom:20}}>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(260px,1fr))",gap:12,marginBottom:16}}>
               {["fixo","misto","extra"].map(tipo=>{
                 const cats=POTENCIAL.filter(p=>p.tipo===tipo);
                 const avgT=cats.reduce((a,p)=>a+p.avg,0);
@@ -1012,7 +1012,7 @@ export default function Dashboard() {
                 );
               })}
               {/* TOTAL GERAL */}
-              <div style={{padding:"14px 18px",background:"linear-gradient(135deg,#EFF6FF,#F0FDF4)",borderRadius:12,border:"1px solid #BFDBFE",display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:12}}>
+              <div style={{padding:"14px 12px",background:"linear-gradient(135deg,#EFF6FF,#F0FDF4)",borderRadius:12,border:"1px solid #BFDBFE",display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:10}}>
                 {[["Total atual/mês",mediaAtual,"#374151"],["Meta/mês",metaMes,P.verde],["Redução mensal",totalCorte,P.verde],["Economia/ano",totalCorte*12,P.verde]].map(([l,v,c],i)=>(
                   <div key={i} style={{textAlign:"center"}}>
                     <div style={{fontSize:9,color:"#64748b",textTransform:"uppercase",fontWeight:700,marginBottom:3}}>{l}</div>
@@ -1118,7 +1118,7 @@ export default function Dashboard() {
           {/* INSIGHTS PRIORITÁRIOS */}
           <div style={{background:"#fff",borderRadius:16,padding:"18px 22px",boxShadow:"0 1px 6px rgba(0,0,0,.06)"}}>
             <div style={{fontSize:14,fontWeight:700,color:"#374151",marginBottom:14}}>🎯 Ações prioritárias baseadas nos dados</div>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:8}}>
               {[
                 {p:"🔴 URGENTE",bg:"#FEF2F2",bc:"#EF4444",tc:"#991B1B",
                   msg:"Incluir Itaú Pão de Açúcar no débito automático. R$68,10 desperdiçados em 2 meses de encargos desnecessários."},
@@ -1159,7 +1159,7 @@ export default function Dashboard() {
         return(
         <div>
           {/* KPIs TOPO */}
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12,marginBottom:20}}>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:10,marginBottom:16}}>
             {[
               {l:"✅ Liberado (Jun–Jul)",v:totalEncerradas,c:P.verde,sub:`${ENCERRADAS.length} parcelas encerradas · +${R(totalEncerradas)}/mês a partir de ago`},
               {l:"⏳ Ainda a pagar",v:totalAtivas,c:P.amber,sub:`${ATIVAS.length} parcelas ativas · encerram até dez/26`},
@@ -1176,7 +1176,7 @@ export default function Dashboard() {
           {/* ENCERRADAS */}
           <div style={{background:"#fff",borderRadius:16,padding:"18px 22px",marginBottom:16,boxShadow:"0 1px 6px rgba(0,0,0,.06)",borderLeft:`4px solid ${P.verde}`}}>
             <div style={{fontSize:13,fontWeight:800,color:P.verde,marginBottom:12}}>✅ Parcelas encerradas em Jun–Jul/26 — caixa liberado a partir de Ago</div>
-            <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10}}>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:8}}>
               {ENCERRADAS.map((e,i)=>(
                 <div key={i} style={{background:"#F0FDF4",borderRadius:12,padding:"12px 14px",border:"1px solid #BBF7D0"}}>
                   <div style={{fontSize:11,fontWeight:700,color:"#166534"}}>{e.desc}</div>
@@ -1191,8 +1191,8 @@ export default function Dashboard() {
           <div style={{background:"#fff",borderRadius:16,padding:"18px 22px",marginBottom:16,boxShadow:"0 1px 6px rgba(0,0,0,.06)"}}>
             <div style={{fontSize:13,fontWeight:800,color:"#374151",marginBottom:4}}>🗓️ Parcelas ativas — quando cada uma encerra</div>
             <div style={{fontSize:10,color:"#94a3b8",marginBottom:14}}>Vermelho = último mês · Cinza = já encerrou</div>
-            <div style={{overflowX:"auto"}}>
-              <div style={{display:"grid",gridTemplateColumns:"190px repeat(5,1fr)",minWidth:700,gap:0}}>
+            <div style={{overflowX:"auto",WebkitOverflowScrolling:"touch"}}>
+              <div style={{display:"grid",gridTemplateColumns:"150px repeat(5,80px)",minWidth:700,gap:0}}>
                 <div style={{padding:"6px 8px",fontSize:10,fontWeight:700,color:"#94a3b8",borderBottom:"1px solid #f1f5f9"}}></div>
                 {["Ago/26","Set/26","Out/26","Nov/26","Dez/26"].map(m=>(
                   <div key={m} style={{padding:"6px 4px",fontSize:10,fontWeight:700,color:"#64748b",textAlign:"center",borderBottom:"1px solid #f1f5f9"}}>{m}</div>
@@ -1243,7 +1243,7 @@ export default function Dashboard() {
           </div>
 
           {/* LIBERAÇÃO ACUMULADA + PROJEÇÃO */}
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:20}}>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))",gap:12,marginBottom:16}}>
             <div style={{background:"#fff",borderRadius:16,padding:"18px 20px",boxShadow:"0 1px 6px rgba(0,0,0,.06)"}}>
               <div style={{fontSize:13,fontWeight:700,color:"#374151",marginBottom:4}}>Liberação acumulada de caixa</div>
               <div style={{fontSize:10,color:"#94a3b8",marginBottom:14}}>Soma do que encerra mês a mês (sem novos parcelamentos)</div>
@@ -1320,7 +1320,7 @@ export default function Dashboard() {
                     </div>
                     <div style={{fontSize:13,fontWeight:800,color:"#1e293b",marginBottom:3}}>{s.titulo}</div>
                     <div style={{fontSize:10.5,color:"#64748b",fontStyle:"italic",marginBottom:8}}>{s.impacto}</div>
-                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+                    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:8}}>
                       <div style={{background:"rgba(255,255,255,.7)",borderRadius:10,padding:"8px 10px"}}>
                         <div style={{fontSize:9,fontWeight:700,color:"#64748b",textTransform:"uppercase",letterSpacing:".04em",marginBottom:4}}>Como fazer</div>
                         <div style={{fontSize:10.5,color:"#374151",lineHeight:1.6}}>{s.como}</div>
