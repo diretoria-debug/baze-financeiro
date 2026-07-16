@@ -1451,7 +1451,7 @@ export default function Dashboard() {
                 {[
                   ["Meta total",totalMeta,"#c4b5fd"],
                   ["Comprometido",dadosMes.totalComprometido,"#fca5a5"],
-                  [saldoLivre>=0?"Disponível":"Excedente",saldoLivre>=0?"#86efac":"#fca5a5"],
+                  [saldoLivre>=0?"Disponível":"Excedente", Math.abs(saldoLivre), saldoLivre>=0?"#86efac":"#fca5a5"],
                 ].map(([l,v,co],i)=>(
                   <div key={i} style={{background:"rgba(255,255,255,.12)",borderRadius:10,padding:"8px 10px",textAlign:"center"}}>
                     <div style={{color:"rgba(255,255,255,.65)",fontSize:9,fontWeight:700,textTransform:"uppercase",marginBottom:2}}>{l}</div>
@@ -1624,7 +1624,7 @@ export default function Dashboard() {
                     </tr>
                     <tr style={{background:"#F0FDF4"}}>
                       <td colSpan={3} style={{padding:"7px 6px",fontWeight:700,color:saldoLivre>=0?P.verde:P.verm}}>{saldoLivre>=0?"Disponível para novos gastos":"Excedente do orçamento"}</td>
-                      <td style={{padding:"7px 6px",textAlign:"right",fontWeight:900,color:saldoLivre>=0?P.verde:P.verm}}>{saldoLivre>=0?R(saldoLivre):`+ ${R(-saldoLivre)}`}</td>
+                      <td style={{padding:"7px 6px",textAlign:"right",fontWeight:900,color:saldoLivre>=0?P.verde:P.verm}}>{R(Math.abs(saldoLivre))}</td>
                     </tr>
                   </tfoot>
                 </table>
