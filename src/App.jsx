@@ -861,20 +861,20 @@ export default function Dashboard() {
         const POTENCIAL = [
           {cat:"Serviços (Baze)",    tipo:"fixo",  avg:3450, meta:2600, corte:850,  viavel:true,  como:"Renegociar Vindi plano anual (-15%) + SunCoast já encerrou"},
           {cat:"Seguros/Prev.",      tipo:"fixo",  avg:3142, meta:2400, corte:742,  viavel:true,  como:"Revisar Prudential — comparar mercado, checar sobreposição com AZOS"},
-          {cat:"Seguros (Baze)",     tipo:"fixo",  avg:307,  meta:0,    corte:307,  viavel:true,  como:"Bradesco AUT encerra ago/26 — R$307 libera automaticamente"},
+          {cat:"Seguros (Baze)",     tipo:"fixo",  avg:307,  meta:0,    corte:307,  viavel:true,  como:"Bradesco AUT encerra ago/26 — libera automaticamente"},
           {cat:"Educação",           tipo:"fixo",  avg:2250, meta:1800, corte:450,  viavel:true,  como:"Sta Monica encerra dez/26. Se renovar: negociar à vista (-10%)"},
-          {cat:"Tecnologia (Baze)", tipo:"fixo",  avg:960,  meta:960,  corte:0,    viavel:false, como:"Google Workspace + Pipefy + Claude + Zoom — já otimizados"},
-          {cat:"Tecnologia",         tipo:"fixo",  avg:280,  meta:200,  corte:80,   viavel:true,  como:"Apple Subs + McAfee: revisar duplicatas e cancelar o que não usa"},
-          {cat:"Alimentação",        tipo:"misto", avg:14200,meta:10000,corte:4200, viavel:true,  como:"Limite semanal: supermercado R$1.500 + restaurante R$400. Consolidar canais"},
+          {cat:"Tecnologia (Baze)",  tipo:"fixo",  avg:960,  meta:960,  corte:0,    viavel:false, como:"Google Workspace + Pipefy + Claude + Zoom — já otimizados"},
+          {cat:"Tecnologia",         tipo:"fixo",  avg:280,  meta:200,  corte:80,   viavel:true,  como:"Apple Subs + McAfee: revisar duplicatas"},
+          {cat:"Alimentação",        tipo:"misto", avg:14200,meta:10000,corte:4200, viavel:true,  como:"Limite semanal: supermercado R$1.500 + restaurante R$400"},
           {cat:"Doações/Igreja",     tipo:"misto", avg:2738, meta:2500, corte:238,  viavel:true,  como:"Teto fixo de R$2.500/mês — hoje oscila de R$1.500 a R$5.960"},
-          {cat:"Transporte/Veículos",tipo:"misto", avg:2300, meta:1800, corte:500,  viavel:true,  como:"Reduzir Uber, RJ Pneus encerra set/26, consolidar manutenção"},
-          {cat:"Saúde/Farmácia",     tipo:"misto", avg:420,  meta:350,  corte:70,   viavel:true,  como:"Farmácia com lista de necessidade, evitar compras por impulso"},
-          {cat:"Vestuário",          tipo:"extra", avg:1114, meta:500,  corte:614,  viavel:true,  como:"Orçamento trimestral R$1.500 (R$500/mês). Sem parcelamentos no Black"},
-          {cat:"Lazer/Entretenimento",tipo:"extra",avg:1200, meta:800,  corte:400,  viavel:true,  como:"BT Barra Vogue encerra out/26 (-R$579). Limitar lazer extra a R$200/mês"},
-          {cat:"Viagens",            tipo:"extra", avg:490,  meta:200,  corte:290,  viavel:true,  como:"Parcelas encerram nov/26. Não parcelar novas viagens no Azul"},
-          {cat:"Compras Online",     tipo:"extra", avg:342,  meta:150,  corte:192,  viavel:true,  como:"Cakto + avulsas: concentrar em datas planejadas, sem impulso"},
-          {cat:"Facebook/Mídia",     tipo:"extra", avg:331,  meta:200,  corte:131,  viavel:true,  como:"Definir teto de R$200/mês e medir ROI por campanha"},
-          {cat:"Encargos",           tipo:"extra", avg:47,   meta:0,    corte:47,   viavel:true,  como:"Débito automático no Pão de Açúcar elimina 100% deste custo"},
+          {cat:"Transporte/Veículos",tipo:"misto", avg:2300, meta:1800, corte:500,  viavel:true,  como:"Reduzir Uber, RJ Pneus encerra set/26"},
+          {cat:"Saúde/Farmácia",     tipo:"misto", avg:420,  meta:350,  corte:70,   viavel:true,  como:"Farmácia com lista de necessidade"},
+          {cat:"Vestuário",          tipo:"extra", avg:1114, meta:500,  corte:614,  viavel:true,  como:"Orçamento trimestral R$1.500. Sem parcelamentos no Black"},
+          {cat:"Lazer/Entretenimento",tipo:"extra",avg:1200, meta:800,  corte:400,  viavel:true,  como:"BT Barra Vogue encerra out/26. Limitar lazer extra a R$200/mês"},
+          {cat:"Viagens",            tipo:"extra", avg:490,  meta:200,  corte:290,  viavel:true,  como:"Parcelas encerram nov/26. Não parcelar novas viagens"},
+          {cat:"Compras Online",     tipo:"extra", avg:342,  meta:150,  corte:192,  viavel:true,  como:"Concentrar em datas planejadas, sem impulso"},
+          {cat:"Facebook/Mídia",     tipo:"extra", avg:331,  meta:200,  corte:131,  viavel:true,  como:"Definir teto de R$200/mês e medir ROI"},
+          {cat:"Encargos",           tipo:"extra", avg:47,   meta:0,    corte:47,   viavel:true,  como:"Débito automático no Pão de Açúcar elimina 100%"},
         ];
         const totalCorte = POTENCIAL.filter(p=>p.viavel).reduce((a,p)=>a+p.corte,0);
         const corFixo    = POTENCIAL.filter(p=>p.tipo==="fixo" &&p.viavel).reduce((a,p)=>a+p.corte,0);
@@ -887,24 +887,22 @@ export default function Dashboard() {
         return(
           <div>
             {/* HEADER */}
-            <div style={{background:"linear-gradient(135deg,#0f2a56 0%,#1B3A6B 60%,#2563EB 100%)",borderRadius:16,padding:"20px 26px",marginBottom:20,display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:16}}>
-              <div>
-                <div style={{color:"#93c5fd",fontSize:11,fontWeight:700,textTransform:"uppercase",letterSpacing:".1em",marginBottom:4}}>Potencial de Economia Real</div>
-                <div style={{color:"#fff",fontSize:22,fontWeight:900}}>Baseado nos 7 meses de dados</div>
-                <div style={{color:"#bfdbfe",fontSize:12,marginTop:4}}>Atual: {R(mediaAtual)}/mês → Com cortes: {R(metaMes)}/mês</div>
-              </div>
-              <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:10}}>
-                {[["Corte/mês",totalCorte,"#86efac"],["Economia/ano",totalCorte*12,"#6ee7b7"],["Fixos",corFixo,"#93c5fd"],["Extras",corExtra,"#fca5a5"]].map(([l,v,c],i)=>(
-                  <div key={i} style={{background:"rgba(255,255,255,.1)",borderRadius:12,padding:"10px 14px",textAlign:"center",border:"1px solid rgba(255,255,255,.15)"}}>
+            <div style={{background:"linear-gradient(135deg,#0f2a56 0%,#1B3A6B 60%,#2563EB 100%)",borderRadius:16,padding:"16px 14px",marginBottom:16}}>
+              <div style={{color:"#93c5fd",fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:".1em",marginBottom:4}}>Potencial de Economia Real</div>
+              <div style={{color:"#fff",fontSize:18,fontWeight:900,marginBottom:2}}>Baseado nos 7 meses</div>
+              <div style={{color:"#bfdbfe",fontSize:11,marginBottom:14}}>Atual: {R(mediaAtual)}/mês → Meta: {R(metaMes)}/mês</div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+                {[["Corte/mês",totalCorte,"#86efac"],["Economia/ano",totalCorte*12,"#6ee7b7"],["Fixos",corFixo,"#93c5fd"],["Extras",corExtra,"#fca5a5"]].map(([l,v,co],i)=>(
+                  <div key={i} style={{background:"rgba(255,255,255,.1)",borderRadius:10,padding:"8px 10px",textAlign:"center",border:"1px solid rgba(255,255,255,.15)"}}>
                     <div style={{color:"rgba(255,255,255,.65)",fontSize:9,fontWeight:700,textTransform:"uppercase",marginBottom:2}}>{l}</div>
-                    <div style={{color:"#fff",fontSize:16,fontWeight:900}}>{R(v)}</div>
+                    <div style={{color:"#fff",fontSize:15,fontWeight:900}}>{R(v)}</div>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* 3 CARDS TIPO */}
-            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(260px,1fr))",gap:12,marginBottom:16}}>
+            {/* 3 CARDS TIPO — coluna única no mobile */}
+            <div style={{display:"flex",flexDirection:"column",gap:12,marginBottom:16}}>
               {["fixo","misto","extra"].map(tipo=>{
                 const cats=POTENCIAL.filter(p=>p.tipo===tipo);
                 const avgT=cats.reduce((a,p)=>a+p.avg,0);
@@ -912,41 +910,46 @@ export default function Dashboard() {
                 const corteT=cats.reduce((a,p)=>a+p.corte,0);
                 const pctCorte=Math.round(corteT/avgT*100);
                 const label=tipo==="fixo"?"🔵 Gastos Fixos":tipo==="misto"?"🟡 Gastos Mistos":"🔴 Gastos Extras";
-                const desc=tipo==="fixo"?"Renegociação, cancelamento e revisão de apólices":tipo==="misto"?"Teto mensal, consolidação de canais e controle de variação":"Orçamentos trimestrais, eliminar impulso, encargos zero";
+                const desc=tipo==="fixo"?"Renegociação, cancelamento e revisão de apólices":tipo==="misto"?"Teto mensal, consolidação de canais e controle":"Orçamentos trimestrais, eliminar impulso, encargos zero";
                 const cor=COR_TIPO[tipo];
                 return(
-                  <div key={tipo} style={{background:"#fff",borderRadius:16,padding:"18px 20px",boxShadow:"0 1px 6px rgba(0,0,0,.06)",borderTop:`3px solid ${cor}`}}>
-                    <div style={{fontSize:13,fontWeight:800,color:cor,marginBottom:4}}>{label}</div>
-                    <div style={{fontSize:10.5,color:"#64748b",lineHeight:1.55,marginBottom:14}}>{desc}</div>
+                  <div key={tipo} style={{background:"#fff",borderRadius:14,padding:"14px 16px",boxShadow:"0 1px 6px rgba(0,0,0,.06)",borderLeft:`4px solid ${cor}`}}>
+                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}}>
+                      <div>
+                        <div style={{fontSize:13,fontWeight:800,color:cor}}>{label}</div>
+                        <div style={{fontSize:10,color:"#64748b",marginTop:2}}>{desc}</div>
+                      </div>
+                      <div style={{textAlign:"right",flexShrink:0,marginLeft:8}}>
+                        <div style={{fontSize:9,color:"#94a3b8",textTransform:"uppercase"}}>Economia/ano</div>
+                        <div style={{fontSize:16,fontWeight:900,color:cor}}>{R(corteT*12)}</div>
+                      </div>
+                    </div>
                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
                       <div style={{textAlign:"center"}}>
-                        <div style={{fontSize:9,color:"#94a3b8",textTransform:"uppercase",marginBottom:2}}>Atual/mês</div>
-                        <div style={{fontSize:17,fontWeight:900,color:"#374151"}}>{R(avgT)}</div>
+                        <div style={{fontSize:9,color:"#94a3b8",textTransform:"uppercase"}}>Atual/mês</div>
+                        <div style={{fontSize:15,fontWeight:800,color:"#374151"}}>{R(avgT)}</div>
                       </div>
-                      <div style={{fontSize:18,color:"#e2e8f0"}}>→</div>
+                      <div style={{fontSize:16,color:"#e2e8f0"}}>→</div>
                       <div style={{textAlign:"center"}}>
-                        <div style={{fontSize:9,color:"#94a3b8",textTransform:"uppercase",marginBottom:2}}>Meta/mês</div>
-                        <div style={{fontSize:17,fontWeight:900,color:cor}}>{R(metaT)}</div>
+                        <div style={{fontSize:9,color:"#94a3b8",textTransform:"uppercase"}}>Meta/mês</div>
+                        <div style={{fontSize:15,fontWeight:800,color:cor}}>{R(metaT)}</div>
+                      </div>
+                      <div style={{textAlign:"center"}}>
+                        <div style={{fontSize:9,color:"#94a3b8",textTransform:"uppercase"}}>Corte</div>
+                        <div style={{fontSize:14,fontWeight:800,color:cor}}>{pctCorte}%</div>
                       </div>
                     </div>
-                    <div style={{background:"#f1f5f9",borderRadius:6,height:7,overflow:"hidden",marginBottom:6}}>
+                    <div style={{background:"#f1f5f9",borderRadius:6,height:6,overflow:"hidden"}}>
                       <div style={{width:`${pctCorte}%`,height:"100%",background:cor,borderRadius:6}}/>
-                    </div>
-                    <div style={{display:"flex",justifyContent:"space-between",fontSize:10,marginBottom:10}}>
-                      <span style={{color:"#64748b"}}>Corte possível: <strong style={{color:cor}}>{pctCorte}%</strong></span>
-                      <span style={{color:cor,fontWeight:800}}>-{R(corteT)}/mês</span>
-                    </div>
-                    <div style={{padding:"8px 10px",background:`${cor}12`,borderRadius:8,fontSize:12,fontWeight:800,color:cor,textAlign:"center",border:`1px solid ${cor}30`}}>
-                      Economia/ano: {R(corteT*12)}
                     </div>
                   </div>
                 );
               })}
             </div>
 
-            {/* TABELA DETALHADA */}
-            <div style={{background:"#fff",borderRadius:16,padding:"18px 22px",marginBottom:16,boxShadow:"0 1px 6px rgba(0,0,0,.06)"}}>
-              <div style={{fontSize:14,fontWeight:800,color:"#374151",marginBottom:14}}>Potencial de corte por categoria</div>
+            {/* TABELA DETALHADA — com scroll horizontal */}
+            <div style={{background:"#fff",borderRadius:14,padding:"14px 12px",marginBottom:14,boxShadow:"0 1px 6px rgba(0,0,0,.06)"}}>
+              <div style={{fontSize:13,fontWeight:800,color:"#374151",marginBottom:12}}>Potencial por categoria</div>
               {["fixo","misto","extra"].map(tipo=>{
                 const cats=POTENCIAL.filter(p=>p.tipo===tipo);
                 const avgT=cats.reduce((a,p)=>a+p.avg,0);
@@ -954,96 +957,93 @@ export default function Dashboard() {
                 const corteT=cats.reduce((a,p)=>a+p.corte,0);
                 const cor=COR_TIPO[tipo];
                 const bg=BG_TIPO[tipo];
-                const label=tipo==="fixo"?"🔵 FIXOS — renegociação / cancelamento":tipo==="misto"?"🟡 MISTOS — controle e teto mensal":"🔴 EXTRAS — orçamento e eliminação de impulso";
+                const label=tipo==="fixo"?"🔵 FIXOS":tipo==="misto"?"🟡 MISTOS":"🔴 EXTRAS";
                 return(
-                  <div key={tipo} style={{marginBottom:20}}>
-                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 14px",background:bg,borderRadius:10,marginBottom:8,border:`1px solid ${cor}33`}}>
-                      <span style={{fontSize:12,fontWeight:800,color:cor}}>{label}</span>
-                      <div style={{display:"flex",gap:20,fontSize:11}}>
-                        <span style={{color:"#64748b"}}>Atual: <strong style={{color:"#374151"}}>{R(avgT)}/mês</strong></span>
-                        <span>Meta: <strong style={{color:cor}}>{R(metaT)}/mês</strong></span>
-                        <span style={{fontWeight:800,color:cor}}>Corte: <strong>-{R(corteT)}/mês · -{R(corteT*12)}/ano</strong></span>
-                      </div>
+                  <div key={tipo} style={{marginBottom:16}}>
+                    <div style={{display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:4,padding:"6px 10px",background:bg,borderRadius:8,marginBottom:6,border:`1px solid ${cor}33`}}>
+                      <span style={{fontSize:11,fontWeight:800,color:cor}}>{label}</span>
+                      <span style={{fontSize:10,color:cor,fontWeight:700}}>-{R(corteT)}/mês · -{R(corteT*12)}/ano</span>
                     </div>
-                    <table style={{width:"100%",borderCollapse:"collapse",fontSize:11}}>
-                      <thead>
-                        <tr style={{borderBottom:"1px solid #f1f5f9"}}>
-                          {["Categoria","Média/mês","Meta/mês","Corte/mês","Corte/ano","Ação concreta",""].map((h,hi)=>(
-                            <th key={hi} style={{padding:"6px 8px",textAlign:h==="Categoria"||h==="Ação concreta"||h===""?"left":"right",color:"#94a3b8",fontSize:9,fontWeight:700,textTransform:"uppercase"}}>{h}</th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {cats.map((p,i)=>(
-                          <tr key={i} style={{borderBottom:"1px solid #f8fafc",background:i%2===0?"#fff":"#fafafa"}}>
-                            <td style={{padding:"8px 8px"}}>
-                              <div style={{display:"flex",alignItems:"center",gap:6,fontWeight:700,color:"#1e293b"}}>
-                                <span style={{width:7,height:7,borderRadius:2,background:CAT_COR[p.cat]||"#94a3b8",flexShrink:0}}/>
-                                {p.cat}
-                              </div>
-                            </td>
-                            <td style={{padding:"8px 8px",textAlign:"right",color:"#374151",fontWeight:600}}>{R(p.avg)}</td>
-                            <td style={{padding:"8px 8px",textAlign:"right",color:cor,fontWeight:600}}>{R(p.meta)}</td>
-                            <td style={{padding:"8px 8px",textAlign:"right",fontWeight:800,color:p.corte>0?cor:"#94a3b8"}}>
-                              {p.corte>0?`-${R(p.corte)}`:"—"}
-                            </td>
-                            <td style={{padding:"8px 8px",textAlign:"right",fontWeight:700,color:p.corte>0?"#0f172a":"#94a3b8"}}>
-                              {p.corte>0?R(p.corte*12):"—"}
-                            </td>
-                            <td style={{padding:"8px 8px",fontSize:10,color:"#475569"}}>{p.como}</td>
-                            <td style={{padding:"8px 8px"}}>
-                              <span style={{fontSize:10,fontWeight:700,color:p.viavel?P.verde:"#94a3b8"}}>{p.viavel?"✅":"➡️"}</span>
-                            </td>
+                    <div style={{overflowX:"auto",WebkitOverflowScrolling:"touch"}}>
+                      <table style={{width:"100%",minWidth:460,borderCollapse:"collapse",fontSize:11}}>
+                        <thead>
+                          <tr style={{borderBottom:"1px solid #f1f5f9"}}>
+                            {["Categoria","Atual","Meta","Corte/mês","Corte/ano",""].map((h,hi)=>(
+                              <th key={hi} style={{padding:"5px 6px",textAlign:h==="Categoria"||h===""?"left":"right",color:"#94a3b8",fontSize:9,fontWeight:700,textTransform:"uppercase",whiteSpace:"nowrap"}}>{h}</th>
+                            ))}
                           </tr>
-                        ))}
-                      </tbody>
-                      <tfoot>
-                        <tr style={{background:bg,borderTop:`2px solid ${cor}44`}}>
-                          <td style={{padding:"8px 8px",fontWeight:800,color:cor,fontSize:12}}>Total {tipo}</td>
-                          <td style={{padding:"8px 8px",textAlign:"right",fontWeight:800,color:"#374151"}}>{R(avgT)}</td>
-                          <td style={{padding:"8px 8px",textAlign:"right",fontWeight:800,color:cor}}>{R(metaT)}</td>
-                          <td style={{padding:"8px 8px",textAlign:"right",fontWeight:900,color:cor}}>-{R(corteT)}</td>
-                          <td style={{padding:"8px 8px",textAlign:"right",fontWeight:900,color:"#0f172a"}}>{R(corteT*12)}</td>
-                          <td colSpan={2}/>
-                        </tr>
-                      </tfoot>
-                    </table>
+                        </thead>
+                        <tbody>
+                          {cats.map((p,i)=>(
+                            <tr key={i} style={{borderBottom:"1px solid #f8fafc",background:i%2===0?"#fff":"#fafafa"}}>
+                              <td style={{padding:"6px 6px"}}>
+                                <div style={{display:"flex",alignItems:"center",gap:5,fontWeight:700,color:"#1e293b",whiteSpace:"nowrap"}}>
+                                  <span style={{width:6,height:6,borderRadius:2,background:CAT_COR[p.cat]||"#94a3b8",flexShrink:0}}/>
+                                  {p.cat}
+                                </div>
+                              </td>
+                              <td style={{padding:"6px 6px",textAlign:"right",color:"#374151",fontWeight:600,whiteSpace:"nowrap"}}>{R(p.avg)}</td>
+                              <td style={{padding:"6px 6px",textAlign:"right",color:cor,fontWeight:600,whiteSpace:"nowrap"}}>{R(p.meta)}</td>
+                              <td style={{padding:"6px 6px",textAlign:"right",fontWeight:800,color:p.corte>0?cor:"#94a3b8",whiteSpace:"nowrap"}}>
+                                {p.corte>0?`-${R(p.corte)}`:"—"}
+                              </td>
+                              <td style={{padding:"6px 6px",textAlign:"right",fontWeight:700,color:p.corte>0?"#0f172a":"#94a3b8",whiteSpace:"nowrap"}}>
+                                {p.corte>0?R(p.corte*12):"—"}
+                              </td>
+                              <td style={{padding:"6px 6px"}}>
+                                <span style={{fontSize:10,fontWeight:700,color:p.viavel?P.verde:"#94a3b8"}}>{p.viavel?"✅":"➡️"}</span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                        <tfoot>
+                          <tr style={{background:bg,borderTop:`2px solid ${cor}44`}}>
+                            <td style={{padding:"6px 6px",fontWeight:800,color:cor,fontSize:11}}>Total</td>
+                            <td style={{padding:"6px 6px",textAlign:"right",fontWeight:800,color:"#374151",whiteSpace:"nowrap"}}>{R(avgT)}</td>
+                            <td style={{padding:"6px 6px",textAlign:"right",fontWeight:800,color:cor,whiteSpace:"nowrap"}}>{R(metaT)}</td>
+                            <td style={{padding:"6px 6px",textAlign:"right",fontWeight:900,color:cor,whiteSpace:"nowrap"}}>-{R(corteT)}</td>
+                            <td style={{padding:"6px 6px",textAlign:"right",fontWeight:900,color:"#0f172a",whiteSpace:"nowrap"}}>{R(corteT*12)}</td>
+                            <td/>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
                   </div>
                 );
               })}
               {/* TOTAL GERAL */}
-              <div style={{padding:"14px 12px",background:"linear-gradient(135deg,#EFF6FF,#F0FDF4)",borderRadius:12,border:"1px solid #BFDBFE",display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:10}}>
-                {[["Total atual/mês",mediaAtual,"#374151"],["Meta/mês",metaMes,P.verde],["Redução mensal",totalCorte,P.verde],["Economia/ano",totalCorte*12,P.verde]].map(([l,v,c],i)=>(
+              <div style={{padding:"12px 14px",background:"linear-gradient(135deg,#EFF6FF,#F0FDF4)",borderRadius:12,border:"1px solid #BFDBFE",display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+                {[["Total atual/mês",mediaAtual,"#374151"],["Meta/mês",metaMes,P.verde],["Redução/mês",totalCorte,P.verde],["Economia/ano",totalCorte*12,P.verde]].map(([l,v,co],i)=>(
                   <div key={i} style={{textAlign:"center"}}>
-                    <div style={{fontSize:9,color:"#64748b",textTransform:"uppercase",fontWeight:700,marginBottom:3}}>{l}</div>
-                    <div style={{fontSize:19,fontWeight:900,color:c}}>{R(v)}</div>
+                    <div style={{fontSize:9,color:"#64748b",textTransform:"uppercase",fontWeight:700,marginBottom:2}}>{l}</div>
+                    <div style={{fontSize:16,fontWeight:900,color:co}}>{R(v)}</div>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* WATERFALL */}
-            <div style={{background:"#fff",borderRadius:16,padding:"18px 22px",boxShadow:"0 1px 6px rgba(0,0,0,.06)"}}>
-              <div style={{fontSize:14,fontWeight:800,color:"#374151",marginBottom:4}}>Waterfall — de onde vem a economia</div>
-              <div style={{fontSize:11,color:"#94a3b8",marginBottom:14}}>Contribuição de cada bloco de gasto para atingir a meta mensal</div>
-              <ResponsiveContainer width="100%" height={200}>
+            <div style={{background:"#fff",borderRadius:14,padding:"14px 12px",boxShadow:"0 1px 6px rgba(0,0,0,.06)"}}>
+              <div style={{fontSize:13,fontWeight:800,color:"#374151",marginBottom:4}}>Waterfall — de onde vem a economia</div>
+              <div style={{fontSize:10,color:"#94a3b8",marginBottom:12}}>Atual → Cortes por tipo → Meta</div>
+              <ResponsiveContainer width="100%" height={180}>
                 <BarChart data={[
-                  {nome:"Atual",v:mediaAtual},{nome:"- Fixos",v:corFixo},
-                  {nome:"- Mistos",v:corMisto},{nome:"- Extras",v:corExtra},{nome:"Meta",v:metaMes},
+                  {nome:"Atual",v:mediaAtual},{nome:"-Fixos",v:corFixo},
+                  {nome:"-Mistos",v:corMisto},{nome:"-Extras",v:corExtra},{nome:"Meta",v:metaMes},
                 ]} margin={{top:4,right:8,bottom:0,left:0}}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false}/>
-                  <XAxis dataKey="nome" tick={{fontSize:11,fill:"#475569"}} axisLine={false} tickLine={false}/>
-                  <YAxis tickFormatter={Rk} tick={{fontSize:10,fill:"#94a3b8"}} axisLine={false} tickLine={false}/>
+                  <XAxis dataKey="nome" tick={{fontSize:10,fill:"#475569"}} axisLine={false} tickLine={false}/>
+                  <YAxis tickFormatter={Rk} tick={{fontSize:9,fill:"#94a3b8"}} axisLine={false} tickLine={false}/>
                   <Tooltip content={<Tip/>}/>
                   <Bar dataKey="v" name="Valor" radius={[4,4,0,0]}>
-                    {["#94A3B8",P.azul,P.amber,P.verm,P.verde].map((c,i)=><Cell key={i} fill={c}/>)}
+                    {["#94A3B8",P.azul,P.amber,P.verm,P.verde].map((co,i)=><Cell key={i} fill={co}/>)}
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
-              <div style={{display:"flex",gap:14,marginTop:10,flexWrap:"wrap",fontSize:10,color:"#64748b"}}>
-                {[["Atual","#94A3B8"],["Redução Fixos",P.azul],["Redução Mistos",P.amber],["Redução Extras",P.verm],["Meta",P.verde]].map(([l,c])=>(
-                  <span key={l} style={{display:"flex",alignItems:"center",gap:4}}>
-                    <span style={{width:8,height:8,background:c,borderRadius:2,display:"inline-block"}}/>{l}
+              <div style={{display:"flex",gap:12,marginTop:8,flexWrap:"wrap",fontSize:10,color:"#64748b"}}>
+                {[["Atual","#94A3B8"],["Fixos",P.azul],["Mistos",P.amber],["Extras",P.verm],["Meta",P.verde]].map(([l,co])=>(
+                  <span key={l} style={{display:"flex",alignItems:"center",gap:3}}>
+                    <span style={{width:7,height:7,background:co,borderRadius:2,display:"inline-block"}}/>{l}
                   </span>
                 ))}
               </div>
@@ -1052,7 +1052,7 @@ export default function Dashboard() {
         );
       })()}
 
-      {/* ═══════════════ ABA COMPORTAMENTAL ═══════════════ */}      {/* ═══════════════ ABA COMPORTAMENTAL ═══════════════ */}
+      {/* ═══════════════ ABA COMPORTAMENTAL ═══════════════ */}      {/* ═══════════════ ABA COMPORTAMENTAL ═══════════════ */}      {/* ═══════════════ ABA COMPORTAMENTAL ═══════════════ */}
       {aba==="comportamento"&&(
         <div>
           <div style={{background:"#fff",borderRadius:16,padding:"18px 22px",marginBottom:16,boxShadow:"0 1px 6px rgba(0,0,0,.06)"}}>
