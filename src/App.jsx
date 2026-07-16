@@ -1402,7 +1402,7 @@ export default function Dashboard() {
 
         const dadosMes = calcMesProj(mesProjSel);
         const totalMeta = Object.values(metasExtra).reduce((a,v)=>a+(v||0),0);
-        const saldoLivre = totalMeta - dadosMes.totalComprometido;
+        const saldoLivre = (totalMeta||0) - (dadosMes.totalComprometido||0);
 
         const COR_T = {fixo:P.azul, misto:P.amber, extra:P.verm};
         const LABEL_T = {fixo:"🔵 Fixos",misto:"🟡 Mistos",extra:"🔴 Extras"};
@@ -1521,7 +1521,7 @@ export default function Dashboard() {
                       const pct = meta>0?Math.min(Math.round(comprometido/meta*100),150):0;
                       const ok  = comprometido<=meta||meta===0;
                       const itens = dadosMes.lancamentos.filter(l=>l.cat===cat);
-                      if(meta===0&&comprometido===0) return null;
+                      // Mostrar sempre — mesmo sem meta definida e sem comprometido
                       return(
                         <div key={cat} style={{background:"#fff",borderRadius:12,padding:"12px 14px",marginBottom:8,
                           boxShadow:"0 1px 4px rgba(0,0,0,.06)",borderLeft:`3px solid ${ok?cor:P.verm}`}}>
@@ -1564,11 +1564,13 @@ export default function Dashboard() {
                                   meta: {meta>0?R(meta):"+ definir"}
                                 </div>
                               )}
-                              {meta>0&&comprometido>0&&(
-                                <div style={{fontSize:10,color:P.verde,fontWeight:700,marginTop:2}}>
-                                  {meta-comprometido >= 0
-                                    ? `disponível: ${R(meta-comprometido)}`
-                                    : <span style={{color:P.verm,fontWeight:800}}>excedente: {R(comprometido-meta)}</span>
+                              {comprometido>0&&(
+                                <div style={{fontSize:10,fontWeight:700,marginTop:2,color:meta>0?((meta-comprometido)>=0?P.verde:P.verm):"#94a3b8"}}>
+                                  {meta>0
+                                    ? ((meta-comprometido)>=0
+                                        ? `disponível: ${R(meta-comprometido)}`
+                                        : <span style={{color:P.verm,fontWeight:800}}>excedente: {R(comprometido-meta)}</span>)
+                                    : `comprometido: ${R(comprometido)}`
                                   }
                                 </div>
                               )}
