@@ -692,10 +692,10 @@ export default function Dashboard() {
               Análise Financeira Pessoal · Baze Segs
             </div>
             <div style={{color:"#fff",fontSize:22,fontWeight:900,lineHeight:1.1}}>Jan → Jul 2026</div>
-            <div style={{color:"#bfdbfe",fontSize:13,marginTop:6}}>Eduardo & Angélica · 4 cartões · 7 meses completos</div>
+            <div style={{color:"#bfdbfe",fontSize:13,marginTop:6}}>Eduardo & Angélica · 4 cartões · Jan–Dez 2026</div>
           </div>
           <div style={{textAlign:"right"}}>
-            <div style={{color:"#93c5fd",fontSize:11,marginBottom:2}}>Total acumulado 7 meses</div>
+            <div style={{color:"#93c5fd",fontSize:11,marginBottom:2}}>Total acumulado Jan–Jul/26</div>
             <div style={{color:"#fff",fontSize:26,fontWeight:900,lineHeight:1}}>{R(SERIE.reduce((a,s)=>a+s.total,0))}</div>
             <div style={{marginTop:6,display:"flex",gap:8,justifyContent:"flex-end",flexWrap:"wrap"}}>
               <span style={{background:"rgba(255,255,255,.12)",color:"#e2e8f0",borderRadius:20,padding:"3px 12px",fontSize:11,fontWeight:600}}>Média: {Rk(media)}/mês</span>
@@ -1141,7 +1141,7 @@ export default function Dashboard() {
             {/* HEADER */}
             <div style={{background:"linear-gradient(135deg,#0f2a56 0%,#1B3A6B 60%,#2563EB 100%)",borderRadius:16,padding:"16px 14px",marginBottom:16}}>
               <div style={{color:"#93c5fd",fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:".1em",marginBottom:4}}>Potencial de Economia Real</div>
-              <div style={{color:"#fff",fontSize:18,fontWeight:900,marginBottom:2}}>Baseado nos 7 meses</div>
+              <div style={{color:"#fff",fontSize:18,fontWeight:900,marginBottom:2}}>Baseado no histórico real</div>
               <div style={{color:"#bfdbfe",fontSize:11,marginBottom:14}}>Atual: {R(mediaAtual)}/mês → Meta: {R(metaMes)}/mês</div>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
                 {[["Corte/mês",totalCorte,"#86efac"],["Economia/ano",totalCorte*12,"#6ee7b7"],["Fixos",corFixo,"#93c5fd"],["Extras",corExtra,"#fca5a5"]].map(([l,v,co],i)=>(
