@@ -447,19 +447,30 @@ export default function Dashboard() {
   const [mesSel, setMesSel] = useState("Jul");
   const [aba, setAba] = useState("evolucao");
   const [mesProjSel, setMesProjSel] = useState("Ago/26");
-  const [metasExtra, setMetasExtra] = useState({
-    // Fixos
+  const METAS_PADRAO = {
     "Supermercado":6000,"Seguros/Prev.":3000,"Educação":2800,
     "Serviços (Baze)":3000,"Tecnologia (Baze)":1000,"Seguros (Baze)":400,
     "Tecnologia":400,
-    // Mistos
     "Alimentação":3000,"Transporte/Veículos":3000,"Doações/Igreja":2500,
     "Saúde/Farmácia":1200,
-    // Extras
     "Vestuário":2500,"Lazer/Entretenimento":2000,"Viagens":1500,
     "Compras Online":500,"Beleza/Bem-estar":800,
     "Facebook/Mídia":200,"⚠️ Encargos":0,
+  };
+  // Estado: metas por mês → { "Ago/26": { "Vestuário": 2500, ... }, ... }
+  const [metasPorMes, setMetasPorMes] = useState({
+    "Ago/26":{...METAS_PADRAO},
+    "Set/26":{...METAS_PADRAO},
+    "Out/26":{...METAS_PADRAO},
+    "Nov/26":{...METAS_PADRAO},
+    "Dez/26":{...METAS_PADRAO},
   });
+  // Compatibilidade: metasExtra aponta para o mês selecionado
+  const metasExtra = metasPorMes[mesProjSel] || METAS_PADRAO;
+  const setMetasExtra = (updater) => setMetasPorMes(prev => ({
+    ...prev,
+    [mesProjSel]: typeof updater === "function" ? updater(prev[mesProjSel]||METAS_PADRAO) : updater
+  }));
   const [editandoMeta, setEditandoMeta] = useState(null);
   const [tmpMeta, setTmpMeta] = useState("");
 
@@ -1175,7 +1186,7 @@ export default function Dashboard() {
               <div style={{color:"#c4b5fd",fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:".08em",marginBottom:3}}>Planejamento por Mês</div>
               <div style={{color:"#fff",fontSize:18,fontWeight:900,marginBottom:2}}>🎯 Metas & Comprometidos — {mesProjSel}</div>
               <div style={{color:"#ddd6fe",fontSize:11,marginBottom:14}}>
-                Parcelas + fixos já conhecidos · Saldo livre para novos gastos
+                Metas independentes por mês · Toque nos valores para editar
               </div>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
                 {[
@@ -1192,7 +1203,7 @@ export default function Dashboard() {
             </div>
 
             {/* SELETOR DE MÊS */}
-            <div style={{display:"flex",gap:8,marginBottom:16,overflowX:"auto",paddingBottom:4}}>
+            <div style={{display:"flex",gap:8,marginBottom:8,overflowX:"auto",paddingBottom:4}}>
               {MESES_PROJ.map(m=>(
                 <button key={m} onClick={()=>setMesProjSel(m)}
                   style={{padding:"7px 14px",borderRadius:20,border:"none",cursor:"pointer",fontSize:12,flexShrink:0,fontWeight:mesProjSel===m?800:500,
@@ -1201,6 +1212,16 @@ export default function Dashboard() {
                   {m}
                 </button>
               ))}
+            </div>
+            <div style={{display:"flex",gap:8,marginBottom:14,flexWrap:"wrap"}}>
+              <button onClick={()=>{
+                const atual = metasPorMes[mesProjSel]||METAS_PADRAO;
+                const novo = {};
+                MESES_PROJ.forEach(m=>{ novo[m]={...atual}; });
+                setMetasPorMes(novo);
+              }} style={{fontSize:11,padding:"5px 12px",borderRadius:10,border:"1px solid #DDD6FE",background:"#F5F3FF",color:"#7C3AED",cursor:"pointer",fontWeight:600}}>
+                📋 Copiar metas de {mesProjSel} para todos os meses
+              </button>
             </div>
 
             {/* BARRA TOTAL */}
@@ -1265,9 +1286,27 @@ export default function Dashboard() {
                             </div>
                             <div style={{flexShrink:0,marginLeft:12,textAlign:"right"}}>
                               {comprometido>0&&<div style={{fontSize:13,fontWeight:800,color:ok?cor:P.verm}}>{R(comprometido)}</div>}
-                              <div style={{fontSize:11,color:"#94a3b8"}}>meta: {meta>0?R(meta):"—"}</div>
+                              {editandoMeta===mesProjSel+cat?(
+                                <div style={{display:"flex",gap:4,alignItems:"center",marginTop:2}}>
+                                  <input type="number" value={tmpMeta}
+                                    onChange={e=>setTmpMeta(e.target.value)}
+                                    onKeyDown={e=>{
+                                      if(e.key==="Enter"){setMetasExtra(m=>({...m,[cat]:parseFloat(tmpMeta)||0}));setEditandoMeta(null);}
+                                      if(e.key==="Escape")setEditandoMeta(null);
+                                    }}
+                                    style={{width:80,padding:"3px 6px",fontSize:12,fontWeight:700,borderRadius:8,border:"2px solid #7C3AED",outline:"none",textAlign:"right"}}
+                                    autoFocus/>
+                                  <button onClick={()=>{setMetasExtra(m=>({...m,[cat]:parseFloat(tmpMeta)||0}));setEditandoMeta(null);}}
+                                    style={{background:"#7C3AED",color:"#fff",border:"none",borderRadius:8,padding:"3px 8px",fontSize:11,cursor:"pointer",fontWeight:700}}>✓</button>
+                                </div>
+                              ):(
+                                <div onClick={()=>{setEditandoMeta(mesProjSel+cat);setTmpMeta(meta||"");}}
+                                  style={{cursor:"pointer",fontSize:11,color:"#7C3AED",fontWeight:700,padding:"2px 6px",borderRadius:8,background:"#F5F3FF",border:"1px dashed #DDD6FE",marginTop:2}}>
+                                  meta: {meta>0?R(meta):"+ definir"}
+                                </div>
+                              )}
                               {meta>0&&comprometido>0&&(
-                                <div style={{fontSize:10,color:P.verde,fontWeight:700}}>
+                                <div style={{fontSize:10,color:P.verde,fontWeight:700,marginTop:2}}>
                                   livre: {R(meta-comprometido)}
                                 </div>
                               )}
@@ -1328,7 +1367,7 @@ export default function Dashboard() {
               </div>
               <div style={{marginTop:12,padding:"10px 12px",background:"#F5F3FF",borderRadius:10,border:"1px solid #DDD6FE"}}>
                 <div style={{fontSize:10,color:"#6D28D9",lineHeight:1.7}}>
-                  💡 As metas são editáveis na aba 🎯 Metas. Os valores comprometidos são parcelas já feitas e fixos recorrentes conhecidos. O saldo livre é o que ainda pode ser gasto no mês sem estourar.
+                  💡 Toque em qualquer meta (roxo) para editar. Cada mês tem suas próprias metas. Use "Copiar para todos os meses" para replicar. O saldo livre = meta − já comprometido naquele mês.
                 </div>
               </div>
             </div>
