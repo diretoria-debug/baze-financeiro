@@ -446,6 +446,14 @@ const SUGESTOES = [
 export default function Dashboard() {
   const [mesSel, setMesSel] = useState("Jul");
   const [aba, setAba] = useState("evolucao");
+  const [metasExtra, setMetasExtra] = useState({
+    "Vestuário":2500,"Lazer/Entretenimento":2000,"Viagens":1500,
+    "Compras Online":500,"Doações/Igreja":2500,
+    "Beleza/Bem-estar":800,"Saúde/Farmácia":1200,"⚠️ Encargos":0,
+    "Facebook/Mídia":200,
+  });
+  const [editandoMeta, setEditandoMeta] = useState(null);
+  const [tmpMeta, setTmpMeta] = useState("");
 
   const mesData = useMemo(()=>calcMes(mesSel),[mesSel]);
   const mesAnterior = MESES[MESES.indexOf(mesSel)-1];
@@ -1055,127 +1063,110 @@ export default function Dashboard() {
 
       {/* ═══════════════ ABA METAS & EXTRAS ═══════════════ */}
       {aba==="metas"&&(()=>{
-        const [metasEdit, setMetasEdit] = useState({
-          total:28000,
-          "Vestuário":2500,"Lazer/Entretenimento":2000,"Viagens":1500,
-          "Compras Online":500,"Doações/Igreja":2500,"Restaurantes":2000,
-          "Beleza/Bem-estar":800,"Saúde/Farmácia":1200,"⚠️ Encargos":0,
-          "Facebook/Mídia":200,"Alimentação (restaurantes)":2000,
-        });
-        const [editando, setEditando] = useState(null);
-        const [tmpVal, setTmpVal] = useState("");
-
-        // Calcular totais de extras e mistos por categoria nos 7 meses
         const CATS_FOCO = [
-          {cat:"Vestuário",       tipo:"extra", icon:"👗"},
+          {cat:"Vestuário",            tipo:"extra", icon:"👗"},
           {cat:"Lazer/Entretenimento", tipo:"extra", icon:"🎭"},
-          {cat:"Viagens",         tipo:"extra", icon:"✈️"},
-          {cat:"Compras Online",  tipo:"extra", icon:"🛒"},
-          {cat:"Doações/Igreja",  tipo:"misto", icon:"⛪"},
-          {cat:"Beleza/Bem-estar",tipo:"extra", icon:"💅"},
-          {cat:"Saúde/Farmácia",  tipo:"misto", icon:"💊"},
-          {cat:"⚠️ Encargos",    tipo:"extra", icon:"⚠️"},
-          {cat:"Facebook/Mídia",  tipo:"extra", icon:"📣"},
+          {cat:"Viagens",              tipo:"extra", icon:"✈️"},
+          {cat:"Compras Online",       tipo:"extra", icon:"🛒"},
+          {cat:"Doações/Igreja",       tipo:"misto", icon:"⛪"},
+          {cat:"Beleza/Bem-estar",     tipo:"extra", icon:"💅"},
+          {cat:"Saúde/Farmácia",       tipo:"misto", icon:"💊"},
+          {cat:"⚠️ Encargos",         tipo:"extra", icon:"⚠️"},
+          {cat:"Facebook/Mídia",       tipo:"extra", icon:"📣"},
         ];
 
         // Média real dos 7 meses por categoria
         const avgCat = {};
         MESES.forEach(m=>{
-          const d = MESES_DATA[m];
-          d.lancamentos.forEach(l=>{
+          MESES_DATA[m].lancamentos.forEach(l=>{
             avgCat[l.cat] = (avgCat[l.cat]||0) + l.valor;
           });
         });
         Object.keys(avgCat).forEach(k=>{ avgCat[k] = Math.round(avgCat[k]/7); });
 
-        // Último mês (Jul) por categoria
+        // Julho real por categoria
         const julCat = {};
         MESES_DATA["Jul"].lancamentos.forEach(l=>{
           julCat[l.cat] = (julCat[l.cat]||0) + l.valor;
         });
 
-        const totalMetaExtra = CATS_FOCO.reduce((a,c)=>a+(metasEdit[c.cat]||0),0);
-        const totalRealJul   = CATS_FOCO.reduce((a,c)=>a+(julCat[c.cat]||0),0);
-        const totalAvg       = CATS_FOCO.reduce((a,c)=>a+(avgCat[c.cat]||0),0);
+        const totalMeta = CATS_FOCO.reduce((a,f)=>a+(metasExtra[f.cat]||0),0);
+        const totalJul  = CATS_FOCO.reduce((a,f)=>a+(julCat[f.cat]||0),0);
+        const totalAvg  = CATS_FOCO.reduce((a,f)=>a+(avgCat[f.cat]||0),0);
 
         return(
           <div>
             {/* HEADER */}
-            <div style={{background:"linear-gradient(135deg,#0f2a56 0%,#7C3AED 100%)",borderRadius:16,padding:"16px 14px",marginBottom:16}}>
+            <div style={{background:"linear-gradient(135deg,#4C1D95 0%,#7C3AED 100%)",borderRadius:16,padding:"16px 14px",marginBottom:16}}>
               <div style={{color:"#c4b5fd",fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:".1em",marginBottom:4}}>Controle de Metas</div>
-              <div style={{color:"#fff",fontSize:18,fontWeight:900,marginBottom:2}}>🎯 Metas por Categoria — Extras & Mistos</div>
-              <div style={{color:"#ddd6fe",fontSize:11,marginBottom:14}}>Clique em qualquer meta para editar · Dados reais jan–jul/26</div>
+              <div style={{color:"#fff",fontSize:18,fontWeight:900,marginBottom:2}}>🎯 Extras & Mistos Controláveis</div>
+              <div style={{color:"#ddd6fe",fontSize:11,marginBottom:14}}>Toque em qualquer valor para editar a meta · Dados reais jan–jul/26</div>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
-                {[
-                  ["Meta total extras",totalMetaExtra,"#c4b5fd"],
-                  ["Jul real",totalRealJul,totalRealJul>totalMetaExtra?"#fca5a5":"#86efac"],
-                  ["Média 7 meses",totalAvg,totalAvg>totalMetaExtra?"#fca5a5":"#86efac"],
-                ].map(([l,v,co],i)=>(
-                  <div key={i} style={{background:"rgba(255,255,255,.1)",borderRadius:10,padding:"8px 10px",textAlign:"center"}}>
+                {[["Meta total",totalMeta,"#c4b5fd"],["Jul real",totalJul,totalJul>totalMeta?"#fca5a5":"#86efac"],["Média 7m",totalAvg,totalAvg>totalMeta?"#fca5a5":"#86efac"]].map(([l,v,co],i)=>(
+                  <div key={i} style={{background:"rgba(255,255,255,.12)",borderRadius:10,padding:"8px 10px",textAlign:"center"}}>
                     <div style={{color:"rgba(255,255,255,.65)",fontSize:9,fontWeight:700,textTransform:"uppercase",marginBottom:2}}>{l}</div>
-                    <div style={{color:"#fff",fontSize:15,fontWeight:900}}>{R(v)}</div>
+                    <div style={{color:"#fff",fontSize:14,fontWeight:900}}>{R(v)}</div>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* CARDS DE META POR CATEGORIA */}
+            {/* CARDS EDITÁVEIS */}
             <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:16}}>
               {CATS_FOCO.map(({cat,tipo,icon})=>{
-                const meta   = metasEdit[cat]||0;
-                const real   = julCat[cat]||0;
-                const avg7   = avgCat[cat]||0;
-                const ok     = real <= meta || meta === 0;
-                const pct    = meta > 0 ? Math.min(Math.round(real/meta*100),150) : 0;
-                const corTipo = tipo==="extra"?P.verm:P.amber;
-                const ed = editando===cat;
+                const meta = metasExtra[cat]||0;
+                const real = Math.round(julCat[cat]||0);
+                const avg7 = Math.round(avgCat[cat]||0);
+                const ok   = meta===0 || real<=meta;
+                const pct  = meta>0 ? Math.min(Math.round(real/meta*100),150) : 0;
+                const ed   = editandoMeta===cat;
                 return(
                   <div key={cat} style={{background:"#fff",borderRadius:14,padding:"14px 16px",boxShadow:"0 1px 6px rgba(0,0,0,.06)",borderLeft:`4px solid ${ok?P.verde:P.verm}`}}>
-                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}}>
+                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}}>
                       <div style={{flex:1}}>
-                        <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:3}}>
+                        <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:4}}>
                           <span style={{fontSize:16}}>{icon}</span>
                           <span style={{fontSize:13,fontWeight:800,color:"#1e293b"}}>{cat}</span>
                           <span style={{fontSize:9,padding:"2px 6px",borderRadius:10,fontWeight:700,
                             background:tipo==="extra"?"#FEF2F2":"#FFFBEB",
                             color:tipo==="extra"?P.verm:P.amber}}>{tipo}</span>
                         </div>
-                        <div style={{display:"flex",gap:16,fontSize:11}}>
+                        <div style={{display:"flex",gap:14,fontSize:11}}>
                           <span style={{color:"#64748b"}}>Jul: <strong style={{color:ok?P.verde:P.verm}}>{R(real)}</strong></span>
-                          <span style={{color:"#64748b"}}>Média 7m: <strong style={{color:"#374151"}}>{R(avg7)}</strong></span>
+                          <span style={{color:"#64748b"}}>Média: <strong style={{color:"#374151"}}>{R(avg7)}</strong></span>
                         </div>
                       </div>
-                      <div style={{textAlign:"right",flexShrink:0}}>
+                      <div style={{flexShrink:0,marginLeft:10}}>
                         {ed?(
                           <div style={{display:"flex",gap:6,alignItems:"center"}}>
-                            <input type="number" value={tmpVal}
-                              onChange={e=>setTmpVal(e.target.value)}
+                            <input type="number" value={tmpMeta}
+                              onChange={e=>setTmpMeta(e.target.value)}
                               onKeyDown={e=>{
-                                if(e.key==="Enter"){setMetasEdit(m=>({...m,[cat]:parseFloat(tmpVal)||0}));setEditando(null);}
-                                if(e.key==="Escape")setEditando(null);
+                                if(e.key==="Enter"){setMetasExtra(m=>({...m,[cat]:parseFloat(tmpMeta)||0}));setEditandoMeta(null);}
+                                if(e.key==="Escape")setEditandoMeta(null);
                               }}
-                              style={{width:90,padding:"5px 8px",fontSize:13,fontWeight:700,borderRadius:8,border:`2px solid #7C3AED`,outline:"none",textAlign:"right"}}
+                              style={{width:88,padding:"5px 8px",fontSize:13,fontWeight:700,borderRadius:8,border:"2px solid #7C3AED",outline:"none",textAlign:"right"}}
                               autoFocus/>
-                            <button onClick={()=>{setMetasEdit(m=>({...m,[cat]:parseFloat(tmpVal)||0}));setEditando(null);}}
+                            <button onClick={()=>{setMetasExtra(m=>({...m,[cat]:parseFloat(tmpMeta)||0}));setEditandoMeta(null);}}
                               style={{background:"#7C3AED",color:"#fff",border:"none",borderRadius:8,padding:"5px 10px",fontSize:12,cursor:"pointer",fontWeight:700}}>✓</button>
                           </div>
                         ):(
-                          <div onClick={()=>{setEditando(cat);setTmpVal(meta||"");}}
-                            style={{cursor:"pointer",padding:"4px 10px",borderRadius:10,background:meta>0?"#F5F3FF":"#f1f5f9",border:"1px dashed #7C3AED"}}>
-                            <div style={{fontSize:9,color:"#64748b",textAlign:"right"}}>Meta mensal</div>
-                            <div style={{fontSize:16,fontWeight:900,color:"#7C3AED"}}>{meta>0?R(meta):"Definir →"}</div>
+                          <div onClick={()=>{setEditandoMeta(cat);setTmpMeta(meta||"");}}
+                            style={{cursor:"pointer",padding:"6px 12px",borderRadius:10,background:meta>0?"#F5F3FF":"#f1f5f9",border:"1px dashed #7C3AED",textAlign:"right"}}>
+                            <div style={{fontSize:9,color:"#7C3AED",marginBottom:1}}>meta · toque p/ editar</div>
+                            <div style={{fontSize:15,fontWeight:900,color:"#7C3AED"}}>{meta>0?R(meta):"—"}</div>
                           </div>
                         )}
                       </div>
                     </div>
                     {meta>0&&(
                       <>
-                        <div style={{background:"#f1f5f9",borderRadius:6,height:8,overflow:"hidden",marginBottom:4}}>
+                        <div style={{background:"#f1f5f9",borderRadius:6,height:7,overflow:"hidden",marginBottom:4}}>
                           <div style={{width:`${pct}%`,height:"100%",background:ok?P.verde:P.verm,borderRadius:6,transition:"width .4s"}}/>
                         </div>
-                        <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:"#64748b"}}>
-                          <span>{ok?"✅ Dentro da meta":"🔴 Acima da meta"}</span>
-                          <span style={{fontWeight:700,color:ok?P.verde:P.verm}}>{pct}% da meta</span>
+                        <div style={{display:"flex",justifyContent:"space-between",fontSize:10}}>
+                          <span style={{color:ok?P.verde:P.verm,fontWeight:700}}>{ok?"✅ Dentro da meta":"🔴 Acima da meta"}</span>
+                          <span style={{color:"#64748b",fontWeight:700}}>{pct}%</span>
                         </div>
                       </>
                     )}
@@ -1184,39 +1175,35 @@ export default function Dashboard() {
               })}
             </div>
 
-            {/* EVOLUÇÃO DOS EXTRAS — gráfico */}
+            {/* GRÁFICO EVOLUÇÃO EXTRAS */}
             <div style={{background:"#fff",borderRadius:14,padding:"14px 12px",marginBottom:14,boxShadow:"0 1px 6px rgba(0,0,0,.06)"}}>
               <div style={{fontSize:13,fontWeight:800,color:"#374151",marginBottom:4}}>Evolução dos extras — jan a jul/26</div>
-              <div style={{fontSize:10,color:"#94a3b8",marginBottom:12}}>Gastos que podem ser controlados com metas</div>
-              <ResponsiveContainer width="100%" height={200}>
+              <div style={{fontSize:10,color:"#94a3b8",marginBottom:12}}>Gastos controláveis vs meta definida</div>
+              <ResponsiveContainer width="100%" height={180}>
                 <BarChart data={MESES.map(m=>{
                   const lanc = MESES_DATA[m].lancamentos;
                   const extra = Math.round(lanc.filter(l=>l.tipo==="extra").reduce((a,l)=>a+l.valor,0));
-                  const misto = Math.round(lanc.filter(l=>l.tipo==="misto"&&!["Supermercado"].includes(l.cat)).reduce((a,l)=>a+l.valor,0));
+                  const misto = Math.round(lanc.filter(l=>l.tipo==="misto").reduce((a,l)=>a+l.valor,0));
                   return {mes:m, extra, misto};
                 })} margin={{top:4,right:8,bottom:0,left:0}}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false}/>
                   <XAxis dataKey="mes" tick={{fontSize:11,fill:"#94a3b8"}} axisLine={false} tickLine={false}/>
                   <YAxis tickFormatter={Rk} tick={{fontSize:9,fill:"#94a3b8"}} axisLine={false} tickLine={false}/>
                   <Tooltip content={<Tip/>}/>
-                  <ReferenceLine y={totalMetaExtra} stroke="#7C3AED" strokeDasharray="5 3" label={{value:"Meta",fontSize:9,fill:"#7C3AED",position:"right"}}/>
-                  <Bar dataKey="misto" name="Misto controlável" stackId="a" fill={P.amber} radius={[0,0,0,0]}/>
+                  <ReferenceLine y={totalMeta} stroke="#7C3AED" strokeDasharray="5 3" label={{value:"Meta",fontSize:9,fill:"#7C3AED",position:"right"}}/>
+                  <Bar dataKey="misto" name="Misto" stackId="a" fill={P.amber}/>
                   <Bar dataKey="extra" name="Extra" stackId="a" fill={P.verm} radius={[3,3,0,0]}/>
                 </BarChart>
               </ResponsiveContainer>
               <div style={{display:"flex",gap:14,marginTop:8,fontSize:10,color:"#64748b"}}>
-                <span style={{display:"flex",alignItems:"center",gap:4}}><span style={{width:8,height:8,background:P.amber,borderRadius:2,display:"inline-block"}}/>Misto controlável</span>
+                <span style={{display:"flex",alignItems:"center",gap:4}}><span style={{width:8,height:8,background:P.amber,borderRadius:2,display:"inline-block"}}/>Misto</span>
                 <span style={{display:"flex",alignItems:"center",gap:4}}><span style={{width:8,height:8,background:P.verm,borderRadius:2,display:"inline-block"}}/>Extra</span>
               </div>
             </div>
 
-            {/* DICA */}
             <div style={{background:"#F5F3FF",borderRadius:12,padding:"12px 14px",border:"1px solid #DDD6FE"}}>
-              <div style={{fontSize:12,fontWeight:700,color:"#7C3AED",marginBottom:4}}>💡 Como usar</div>
-              <div style={{fontSize:11,color:"#6D28D9",lineHeight:1.6}}>
-                Toque em qualquer meta para editar. As metas são salvas na sessão atual.
-                No mês seguinte, ao processar as novas faturas, os valores reais são atualizados automaticamente.
-              </div>
+              <div style={{fontSize:11,fontWeight:700,color:"#7C3AED",marginBottom:3}}>💡 Como usar</div>
+              <div style={{fontSize:11,color:"#6D28D9",lineHeight:1.6}}>Toque em qualquer cartão para definir ou ajustar a meta mensal. A barra mostra o consumo de julho vs a meta definida.</div>
             </div>
           </div>
         );
