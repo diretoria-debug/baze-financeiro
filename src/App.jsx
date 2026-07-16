@@ -668,6 +668,13 @@ export default function Dashboard() {
 
   const varTotal = mesAntData ? pct(mesData.total, mesAntData.total) : 0;
   const media = Math.round(SERIE.reduce((a,s)=>a+s.total,0)/7);
+  // Média projetada 12 meses: soma dos 7 reais + estimativa dos 5 futuros
+  const MESES_FUTUROS = ["Ago","Set","Out","Nov","Dez"];
+  const totalFuturos = MESES_FUTUROS.reduce((a,m)=>{
+    const d = MESES_DATA[m];
+    return a + (d ? Math.round(d.lancamentos.reduce((s,l)=>s+l.valor,0)) : media);
+  }, 0);
+  const media12 = Math.round((SERIE.reduce((a,s)=>a+s.total,0) + totalFuturos) / 12);
 
   const TAB = t => ({
     padding:"8px 18px", borderRadius:8, border:"none", cursor:"pointer", fontSize:13,
@@ -698,7 +705,7 @@ export default function Dashboard() {
             <div style={{color:"#93c5fd",fontSize:11,marginBottom:2}}>Total acumulado Jan–Dez/26</div>
             <div style={{color:"#fff",fontSize:26,fontWeight:900,lineHeight:1}}>{R(SERIE.reduce((a,s)=>a+s.total,0))}</div>
             <div style={{marginTop:6,display:"flex",gap:8,justifyContent:"flex-end",flexWrap:"wrap"}}>
-              <span style={{background:"rgba(255,255,255,.12)",color:"#e2e8f0",borderRadius:20,padding:"3px 12px",fontSize:11,fontWeight:600}}>Média: {Rk(media)}/mês</span>
+              <span style={{background:"rgba(255,255,255,.12)",color:"#e2e8f0",borderRadius:20,padding:"3px 12px",fontSize:11,fontWeight:600}}>Média 12m: {Rk(media12)}/mês</span>
               <span style={{background:"#10B981",color:"#fff",borderRadius:20,padding:"3px 12px",fontSize:11,fontWeight:700}}>Melhor: Jul R$32.437</span>
               <span style={{background:"#EF4444",color:"#fff",borderRadius:20,padding:"3px 12px",fontSize:11,fontWeight:700}}>Pico: Mai R$48.026</span>
             </div>
@@ -1132,7 +1139,11 @@ export default function Dashboard() {
         const corFixo    = POTENCIAL.filter(p=>p.tipo==="fixo" &&p.viavel).reduce((a,p)=>a+p.corte,0);
         const corMisto   = POTENCIAL.filter(p=>p.tipo==="misto"&&p.viavel).reduce((a,p)=>a+p.corte,0);
         const corExtra   = POTENCIAL.filter(p=>p.tipo==="extra"&&p.viavel).reduce((a,p)=>a+p.corte,0);
-        const mediaAtual = Math.round(SERIE.reduce((a,s)=>a+s.total,0)/7);
+        const _fut = ["Ago","Set","Out","Nov","Dez"].reduce((a,m)=>{
+          const d=MESES_DATA[m];
+          return a+(d?Math.round(d.lancamentos.reduce((s,l)=>s+l.valor,0)):0);
+        },0);
+        const mediaAtual = Math.round((SERIE.reduce((a,s)=>a+s.total,0)+_fut)/12);
         const metaMes    = mediaAtual - totalCorte;
         const COR_TIPO   = {fixo:P.azul, misto:P.amber, extra:P.verm};
         const BG_TIPO    = {fixo:"#EFF6FF", misto:"#FFFBEB", extra:"#FEF2F2"};
