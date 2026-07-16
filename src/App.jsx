@@ -676,6 +676,29 @@ export default function Dashboard() {
   }, 0);
   const media12 = Math.round((SERIE.reduce((a,s)=>a+s.total,0) + totalFuturos) / 12);
 
+  // ── Meses com fatura fechada (fecha todo dia 11) ────────────────────────────
+  // Meses históricos Jan–Jul são sempre fechados.
+  // Mês atual: fechado se hoje >= dia 11.
+  const HOJE = new Date();
+  const DIA_HOJE = HOJE.getDate();
+  const MES_IDX_HOJE = HOJE.getMonth(); // 0=Jan
+  const MESES_ABREV = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
+  const MES_NOME_ATUAL = MESES_ABREV[MES_IDX_HOJE];
+
+  // Meses históricos sempre fechados
+  const MESES_HISTORICOS = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul"];
+  // Mês atual entra se hoje >= dia 11 E o mês estiver no MESES_DATA com total > 0
+  const MESES_FECHADOS = [
+    ...MESES_HISTORICOS,
+    ...(DIA_HOJE >= 11 && MESES_DATA[MES_NOME_ATUAL] && MESES_DATA[MES_NOME_ATUAL].total > 0
+      ? [MES_NOME_ATUAL] : [])
+  ];
+
+  // Melhor e Pico calculados só sobre meses fechados
+  const SERIE_FECHADA = SERIE.filter(s => MESES_FECHADOS.includes(s.mes));
+  const melhorMes = SERIE_FECHADA.reduce((a,s) => s.total < a.total ? s : a, SERIE_FECHADA[0]||{mes:"—",total:0});
+  const picoMes   = SERIE_FECHADA.reduce((a,s) => s.total > a.total ? s : a, SERIE_FECHADA[0]||{mes:"—",total:0});
+
   const TAB = t => ({
     padding:"8px 18px", borderRadius:8, border:"none", cursor:"pointer", fontSize:13,
     fontWeight:aba===t?700:400, background:aba===t?P.azul:"#f1f5f9",
@@ -706,8 +729,8 @@ export default function Dashboard() {
             <div style={{color:"#fff",fontSize:26,fontWeight:900,lineHeight:1}}>{R(SERIE.reduce((a,s)=>a+s.total,0))}</div>
             <div style={{marginTop:6,display:"flex",gap:8,justifyContent:"flex-end",flexWrap:"wrap"}}>
               <span style={{background:"rgba(255,255,255,.12)",color:"#e2e8f0",borderRadius:20,padding:"3px 12px",fontSize:11,fontWeight:600}}>Média 12m: {Rk(media12)}/mês</span>
-              <span style={{background:"#10B981",color:"#fff",borderRadius:20,padding:"3px 12px",fontSize:11,fontWeight:700}}>Melhor: Jul R$32.437</span>
-              <span style={{background:"#EF4444",color:"#fff",borderRadius:20,padding:"3px 12px",fontSize:11,fontWeight:700}}>Pico: Mai R$48.026</span>
+              <span style={{background:"#10B981",color:"#fff",borderRadius:20,padding:"3px 12px",fontSize:11,fontWeight:700}}>Melhor: {melhorMes.mes} {Rk(melhorMes.total)}</span>
+              <span style={{background:"#EF4444",color:"#fff",borderRadius:20,padding:"3px 12px",fontSize:11,fontWeight:700}}>Pico: {picoMes.mes} {Rk(picoMes.total)}</span>
             </div>
           </div>
         </div>
